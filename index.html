@@ -1,36 +1,590 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>KD Portfolio</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kaushal Dholakiya — Cybersecurity Portfolio</title>
+<meta name="description" content="Kaushal Dholakiya — Penetration Tester | VAPT Analyst | Cybersecurity & AI" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='85' font-size='80'>KD</text></svg>">
 
 <style>
-body{
-    background:#0f172a;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-    padding:100px;
-}
+  /* ---------- Base / theme ---------- */
+  :root{
+    --bg:#071122;
+    --panel:#071827;
+    --muted:#9fb0c8;
+    --accent:#00d4ff;
+    --accent-2:#7cffb2;
+    --glass: rgba(255,255,255,0.03);
+    --card: rgba(255,255,255,0.03);
+    --glow: 0 6px 24px rgba(0,212,255,0.08);
+    --radius:14px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  }
 
-h1{
-    font-size:50px;
-}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(0,212,255,0.03), transparent), var(--bg);
+    color:#dbe9f3;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
 
-p{
-    font-size:20px;
-}
+  /* ---------- top nav ---------- */
+  .nav{
+    position:fixed;left:0;right:0;top:18px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:40;
+    pointer-events:none;
+  }
+  .nav .brand{pointer-events:auto;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent);display:flex;gap:10px;align-items:center;}
+  .brand .logo{font-family:var(--mono);font-weight:700;color:var(--accent);letter-spacing:0.6px;}
+  .nav .links{display:flex;gap:10px;align-items:center;pointer-events:auto;}
+  .nav a{
+    color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-size:14px;
+  }
+  .nav a:hover{color:var(--accent);background:var(--glass);}
 
+  /* ---------- hero ---------- */
+  header.hero{
+    min-height:92vh;display:flex;align-items:center;justify-content:center;padding:64px 6vw;position:relative;z-index:2;
+  }
+  .hero-inner{max-width:1200px;width:100%;display:grid;grid-template-columns:1fr 480px;gap:28px;align-items:center;}
+  .hero-card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+    border-radius:var(--radius); padding:36px; box-shadow:var(--glow);
+    backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,0.03);
+  }
+
+  .hero-title{font-size:36px;margin:0 0 8px 0;letter-spacing:0.2px;}
+  .hero-sub{color:var(--muted);margin:0 0 18px 0;font-size:15px;}
+  .hero-cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);cursor:pointer;text-decoration:none;color:inherit;background:transparent;}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),#6fe2ff);color:#02111a;font-weight:700;border:none;box-shadow:0 6px 20px rgba(0,212,255,0.12);}
+  .small{font-size:13px;padding:8px 12px;border-radius:8px;}
+
+  /* ---------- terminal / right column ---------- */
+  .terminal-wrap{position:relative;overflow:hidden;border-radius:12px;height:100%;display:flex;flex-direction:column;}
+  .terminal{
+    background:linear-gradient(180deg,#020617, rgba(0,0,0,0.02));
+    border-radius:12px;padding:16px;color:#9eeef7;font-family:var(--mono);font-size:13px;min-height:320px;box-shadow:inset 0 0 40px rgba(0,0,0,0.6);
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .term-head{display:flex;gap:8px;align-items:center;padding:8px 6px 10px 6px;}
+  .dot{width:12px;height:12px;border-radius:50%;}
+  .dot.red{background:#ff6b6b} .dot.yellow{background:#ffd166} .dot.green{background:#7cffb2}
+  .term-body{flex:1;overflow:auto;padding:6px 4px;}
+  .term-line{white-space:pre-wrap;line-height:1.4;}
+  .term-cmd{color:#9ff7ff}
+  .term-out{color:var(--muted)}
+
+  /* ---------- matrix background ---------- */
+  .matrix-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.22;mix-blend-mode:screen;}
+
+  /* ---------- sections ---------- */
+  main{position:relative;z-index:3;}
+  section{padding:56px 6vw;max-width:1200px;margin:0 auto;}
+  .section-title{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+  .section-title h2{margin:0;font-size:22px;color:#e6f9ff}
+  .underline{height:2px;width:48px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:4px;}
+
+  /* ---------- grids ---------- */
+  .grid{display:grid;gap:18px;}
+  .skills-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  .project-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+
+  .card{
+    background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+    box-shadow:0 6px 20px rgba(2,6,23,0.6);
+  }
+
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:13px;color:var(--muted);}
+
+  /* ---------- contact ---------- */
+  form.contact{display:grid;gap:12px;grid-template-columns:1fr 1fr;}
+  form.contact .full{grid-column:1/-1;}
+  input,textarea,select{
+    background:transparent;border:1px solid rgba(255,255,255,0.04);padding:12px;border-radius:10px;color:inherit;font-size:14px;
+  }
+  textarea{min-height:120px;resize:vertical;}
+  .form-actions{display:flex;gap:12px;justify-content:flex-end;}
+  .note{color:var(--muted);font-size:13px}
+
+  /* ---------- footer ---------- */
+  footer{padding:24px 6vw;text-align:center;color:var(--muted);font-size:13px;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:980px){
+    .hero-inner{grid-template-columns:1fr;gap:16px;}
+    .nav{top:8px;}
+    .nav .brand{display:none}
+  }
 </style>
-
 </head>
 
 <body>
 
-<h1>Kaushal (KD)</h1>
+<!-- matrix effect canvas -->
+<canvas id="matrix" class="matrix-canvas" aria-hidden="true"></canvas>
 
-<p>Cybersecurity | AI Developer | Builder</p>
+<!-- nav -->
+<div class="nav" role="navigation" aria-label="Main navigation">
+  <div class="brand" title="Kaushal (KD)">
+    <div class="logo">KD</div>
+    <div style="font-size:13px;color:var(--muted)">kaushaldholakiya4.com</div>
+  </div>
 
-<p>Welcome to my portfolio website.</p>
+  <div class="links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+    <a class="pill" href="#contact">Hire Me</a>
+  </div>
+</div>
+
+<!-- hero -->
+<header class="hero" role="banner">
+  <div class="hero-inner">
+    <div class="hero-card">
+      <h1 class="hero-title">Kaushal Dholakiya</h1>
+      <div class="hero-sub">Penetration Tester | VAPT Analyst | Cybersecurity & AI Developer</div>
+
+      <p style="color:var(--muted);line-height:1.6">
+        I build secure systems, perform VAPT, and integrate AI to automate security analysis. 
+        I practice on Hack The Box and TryHackMe and build projects that combine AI with defensive tooling.
+      </p>
+
+      <div style="margin-top:16px" class="hero-cta">
+        <a class="btn btn-primary" href="#projects">View Projects</a>
+        <a class="btn small" href="#contact">Contact</a>
+        <a class="btn small" href="https://kd-dev2004.github.io" target="_blank" rel="noopener">Resume</a>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="pill">VAPT</span>
+        <span class="pill">Web Security</span>
+        <span class="pill">AI Integration</span>
+        <span class="pill">Automation</span>
+      </div>
+    </div>
+
+    <!-- terminal panel -->
+    <div class="terminal-wrap">
+      <div class="terminal" aria-hidden="false" id="terminal">
+        <div class="term-head">
+          <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+          <div style="margin-left:auto;color:var(--muted);font-size:13px">kd@portfolio:~$</div>
+        </div>
+
+        <div class="term-body" id="term-body" role="log" aria-live="polite"></div>
+
+        <div style="font-size:12px;color:var(--muted);padding-top:8px">
+          <span class="note">Interactive terminal — simulates quick demos and reconnaissance output</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- About -->
+  <section id="about" aria-labelledby="about-title">
+    <div class="section-title">
+      <div class="underline"></div>
+      <h2 id="about-title">About Me</h2>
+    </div>
+
+    <div class="card">
+      <p style="color:var(--muted);line-height:1.7;">
+        I am a cybersecurity enthusiast focusing on vulnerability assessment, penetration testing,
+        and security automation. I combine practical security testing with AI & automation to build
+        tools that speed up discovery and analysis.
+      </p>
+      <p style="margin-top:12px;color:var(--muted)">Location: India • Open to remote & contract roles</p>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" aria-labelledby="skills-title">
+    <div class="section-title">
+      <div class="underline"></div>
+      <h2 id="skills-title">Skills</h2>
+    </div>
+
+    <div class="grid skills-grid">
+      <div class="card">
+        <h3>Security & Penetration Testing</h3>
+        <ul style="color:var(--muted)">
+          <li>Vulnerability Assessment & Penetration Testing (VAPT)</li>
+          <li>OWASP Top 10, Web App Testing</li>
+          <li>CVE analysis & PoC development</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Tools & Platforms</h3>
+        <p style="color:var(--muted)">Burp Suite • Nmap • Metasploit • SQLmap • OWASP ZAP • Wireshark • Hashcat</p>
+      </div>
+
+      <div class="card">
+        <h3>Programming & Automation</h3>
+        <p style="color:var(--muted)">Python • Bash • SQL • C++ • Java — building automation & AI tooling</p>
+      </div>
+
+      <div class="card">
+        <h3>Systems & AI</h3>
+        <p style="color:var(--muted)">Linux • Networking • YOLO / CV • ML for security • Robotics & SLAM (robotics)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" aria-labelledby="projects-title">
+    <div class="section-title">
+      <div class="underline"></div>
+      <h2 id="projects-title">Projects</h2>
+    </div>
+
+    <div class="grid project-grid">
+      <article class="card">
+        <h4>LearnMate — AI Assistant Platform</h4>
+        <p style="color:var(--muted)">Flask + local models, OCR, document understanding, secure auth and role-based access.</p>
+        <p><span class="pill">AI</span> <span class="pill">Flask</span> <span class="pill">OCR</span></p>
+      </article>
+
+      <article class="card">
+        <h4>CyberSense — Multi-Engine Antivirus Scanner</h4>
+        <p style="color:var(--muted)">Aggregates multiple engine detections to create consolidated reports and threat analysis.</p>
+        <p><span class="pill">Malware</span> <span class="pill">Threat Intel</span></p>
+      </article>
+
+      <article class="card">
+        <h4>MovieMate — Recommendation System</h4>
+        <p style="color:var(--muted)">Phi-3 mini based recommender with live scraping and secure handling of inputs.</p>
+        <p><span class="pill">ML</span> <span class="pill">Scraping</span></p>
+      </article>
+
+      <article class="card">
+        <h4>InfiWasTex — Autonomous Waste Robot</h4>
+        <p style="color:var(--muted)">YOLO detection, SLAM navigation, robotic arm for pick-and-place experiments.</p>
+        <p><span class="pill">Robotics</span> <span class="pill">CV</span></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Practice -->
+  <section aria-labelledby="practice-title">
+    <div class="section-title">
+      <div class="underline"></div>
+      <h2 id="practice-title">Hands-on Security Practice</h2>
+    </div>
+    <div class="card">
+      <p style="color:var(--muted)">Active labs on Hack The Box and TryHackMe — real-world exploitation, privilege escalation, and post-exploitation practices.</p>
+      <p style="margin-top:12px;color:var(--muted)"><strong>Badges:</strong> Add your HTB/THM usernames or badge images here.</p>
+    </div>
+  </section>
+
+  <!-- Education & certs -->
+  <section aria-labelledby="edu-title">
+    <div class="section-title">
+      <div class="underline"></div>
+      <h2 id="edu-title">Education & Certifications</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="card">
+        <h4>Education</h4>
+        <p style="color:var(--muted)"><b>M.Sc Cyber Security</b> — Manipal University, Jaipur</p>
+        <p style="color:var(--muted)"><b>B.Sc Computer Science</b> — Mumbai University</p>
+      </div>
+      <div class="card">
+        <h4>Certifications</h4>
+        <ul style="color:var(--muted)">
+          <li>Certified Ethical Hacker (CEH)</li>
+          <li>Python Programming</li>
+          <li>Linux Fundamentals</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" aria-labelledby="contact-title">
+    <div class="section-title">
+      <div class="underline"></div>
+      <h2 id="contact-title">Contact</h2>
+    </div>
+
+    <div class="card">
+      <form id="contactForm" class="contact" onsubmit="return false;">
+        <label class="full">
+          <div style="font-size:13px;color:var(--muted)">Full name</div>
+          <input id="name" name="name" required placeholder="Kaushal Dholakiya">
+        </label>
+
+        <label class="full">
+          <div style="font-size:13px;color:var(--muted)">Email</div>
+          <input id="email" name="email" type="email" required placeholder="you@domain.com">
+        </label>
+
+        <label class="full">
+          <div style="font-size:13px;color:var(--muted)">Message</div>
+          <textarea id="message" name="message" required placeholder="Hi Kaushal — I have a role / project for you..."></textarea>
+        </label>
+
+        <div class="form-actions full">
+          <div style="flex:1" class="note">By clicking send you agree to receive a reply. No spam — just secure collaboration.</div>
+          <div style="display:flex;gap:8px">
+            <button id="sendBtn" class="btn btn-primary" type="button">Send Message</button>
+            <button id="clearBtn" class="btn small" type="button">Clear</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="formStatus" style="margin-top:12px;color:var(--muted);display:none"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span> Kaushal Dholakiya — <span class="note">kaushaldholakiya4.com</span>
+</footer>
+
+<script>
+/* ========= Utilities: create runtime modules from string (keeps everything in one file)
+   We create module blobs then dynamic-import them so code is modular yet single-file.
+*/
+function createModuleURL(code){
+  const blob = new Blob([code], { type: 'text/javascript' });
+  return URL.createObjectURL(blob);
+}
+
+/* ---------- Terminal module ---------- */
+const terminalModuleCode = `
+// Terminal module: provides typewriter + simulated reconnaissance output
+export function attachTerminal(el){
+  const lines = [
+    {cmd:'whoami', out:'kd'},
+    {cmd:'uname -a', out:'Linux nginx-kd 5.15.0-70-generic x86_64 GNU/Linux'},
+    {cmd:'nmap -sC -sV 192.168.1.0/24', out:'Found hosts: 192.168.1.10 (http), 192.168.1.42 (ssh)'},
+    {cmd:'python3 exploit.py --target 192.168.1.10', out:'[+] Exploit simulated: CVE-2023-XXXX - PoC executed (demo)'},
+    {cmd:'cat vuln-report.txt', out:'Report saved: vuln-report-2026-03-09.txt'}
+  ];
+
+  let idx=0;
+  const container = el;
+  container.innerHTML = '';
+
+  async function typeLine(text, cls='term-cmd'){
+    const line = document.createElement('div');
+    line.className = 'term-line '+cls;
+    container.appendChild(line);
+    for(let i=0;i<text.length;i++){
+      line.textContent += text[i];
+      await new Promise(r => setTimeout(r, 18 + Math.random()*25));
+      container.scrollTop = container.scrollHeight;
+    }
+    return line;
+  }
+
+  async function run(){
+    while(true){
+      const item = lines[idx % lines.length];
+      await typeLine('kd@portfolio:~$ ' + item.cmd, 'term-cmd');
+      await new Promise(r => setTimeout(r, 250 + Math.random()*600));
+      await typeLine(item.out, 'term-out');
+      await new Promise(r => setTimeout(r, 700 + Math.random()*800));
+      idx++;
+      if(idx%lines.length === 0){
+        // pause longer and clear older lines to keep it tidy
+        await new Promise(r => setTimeout(r, 1200));
+        if(container.childElementCount > 24){
+          // remove old
+          while(container.childElementCount > 16) container.removeChild(container.firstChild);
+        }
+      }
+    }
+  }
+
+  run().catch(e=>console.error(e));
+}
+`;
+
+/* ---------- Matrix module ---------- */
+const matrixModuleCode = `
+// Matrix module: draws a "matrix rain" with glow; responsive to device pixel ratio
+export function startMatrix(canvas){
+  const ctx = canvas.getContext('2d');
+  let cols, rows, size=16, drops;
+
+  function setup(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.scale(dpr, dpr);
+    size = Math.max(12, Math.min(18, Math.floor(window.innerWidth / 120)));
+    cols = Math.floor(window.innerWidth / size);
+    drops = new Array(cols).fill(0);
+  }
+
+  function draw(){
+    // fade background slightly
+    ctx.fillStyle = 'rgba(2,7,22,0.12)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.font = size + 'px monospace';
+    for(let i=0;i<drops.length;i++){
+      const x = i * size;
+      const y = drops[i] * size;
+
+      // glowing characters
+      const char = String.fromCharCode(0x30A0 + Math.random()*96);
+      ctx.fillStyle = 'rgba(0,212,255,0.8)';
+      ctx.fillText(char, x, y);
+
+      // subtle bright head
+      ctx.fillStyle = 'rgba(124,255,178,0.18)';
+      ctx.fillText(char, x, y - size/2);
+
+      drops[i]++;
+      if(drops[i] * size > canvas.height / (window.devicePixelRatio || 1) && Math.random() > 0.975){
+        drops[i] = 0;
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  let raf;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(raf);
+    setup();
+    raf = requestAnimationFrame(draw);
+  });
+  setup();
+  raf = requestAnimationFrame(draw);
+
+  return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', ()=>{}); }
+}
+`;
+
+/* ---------- UI interactions module ---------- */
+const uiModuleCode = `
+// UI module: contact form logic, small ui animations, and helpers
+export function wireUI(){
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // contact form
+  const form = document.getElementById('contactForm');
+  const sendBtn = document.getElementById('sendBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const status = document.getElementById('formStatus');
+
+  function showStatus(text, ok=true){
+    status.style.display = 'block';
+    status.style.color = ok ? '#9ff7ff' : '#ff9a9a';
+    status.textContent = text;
+  }
+
+  sendBtn.addEventListener('click', async () => {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if(!name || !email || !message){
+      showStatus('Please fill all fields before sending.', false);
+      return;
+    }
+    // simple email regex
+    if(!/^\\S+@\\S+\\.\\S+$/.test(email)){
+      showStatus('Please enter a valid email address.', false);
+      return;
+    }
+    sendBtn.textContent = 'Sending...';
+    sendBtn.disabled = true;
+
+    // simulate sending (no backend) — save to localStorage & present mailto fallback
+    await new Promise(r => setTimeout(r, 950 + Math.random()*900));
+    localStorage.setItem('kd_last_message', JSON.stringify({name,email,message,ts:Date.now()}));
+    showStatus('Message saved locally. Click "Open email" to send from your client or copy-paste the message.', true);
+
+    // present mailto link
+    const mailto = 'mailto:kaushal@example.com'
+      + '?subject=' + encodeURIComponent('Portfolio contact from ' + name)
+      + '&body=' + encodeURIComponent('Name: ' + name + '\\nEmail: ' + email + '\\n\\n' + message);
+    // make a temporary visible small link
+    const link = document.createElement('a');
+    link.href = mailto; link.textContent = 'Open email'; link.className='btn small';
+    link.style.marginLeft='12px';
+    status.appendChild(link);
+
+    sendBtn.textContent = 'Send Message';
+    sendBtn.disabled = false;
+  });
+
+  clearBtn.addEventListener('click', () => {
+    form.reset();
+    status.style.display = 'none';
+  });
+
+  // small reveal on scroll
+  const revealElements = document.querySelectorAll('section .card, .project-grid .card');
+  const observer = new IntersectionObserver((entries)=>{
+    for(const e of entries){
+      if(e.isIntersecting){
+        e.target.style.transform = 'translateY(0)';
+        e.target.style.opacity = '1';
+      } else {
+        e.target.style.transform = 'translateY(6px)';
+        e.target.style.opacity = '0.98';
+      }
+    }
+  }, {threshold:0.12});
+  revealElements.forEach(el=>{
+    el.style.transition = 'transform .6s cubic-bezier(.2,.9,.2,1), opacity .6s';
+    el.style.transform = 'translateY(6px)'; el.style.opacity='0';
+    observer.observe(el);
+  });
+}
+`;
+
+/* ---------- create module URLs and import ---------- */
+const termURL = createModuleURL(terminalModuleCode);
+const matrixURL = createModuleURL(matrixModuleCode);
+const uiURL = createModuleURL(uiModuleCode);
+
+(async function init(){
+  try{
+    const [termMod, matrixMod, uiMod] = await Promise.all([
+      import(termURL),
+      import(matrixURL),
+      import(uiURL)
+    ]);
+
+    // start matrix
+    const canvas = document.getElementById('matrix');
+    const stopMatrix = matrixMod.startMatrix(canvas);
+
+    // attach terminal
+    const termBody = document.getElementById('term-body');
+    termMod.attachTerminal(termBody);
+
+    // wire ui
+    uiMod.wireUI();
+
+    // cleanup on unload
+    window.addEventListener('unload', ()=>{
+      try{ stopMatrix(); }catch(e){}
+      URL.revokeObjectURL(termURL); URL.revokeObjectURL(matrixURL); URL.revokeObjectURL(uiURL);
+    });
+  }catch(err){
+    console.error('Failed to initialize modules', err);
+  }
+})();
+</script>
 
 </body>
 </html>
