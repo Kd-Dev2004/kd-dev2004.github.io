@@ -1,475 +1,468 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kaushal Dholakiya — Penetration Tester</title>
 
-  <!-- Tailwind + Icons + Monospace font (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root{
-      --neon-green: #00ff41;
-      --cyber-blue: #00f3ff;
-      --muted: #93a8b8;
-      --bg: #03040a;
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#02030a 0%, #061028 100%);color:#dbeef0;font-family:"Fira Code",monospace; -webkit-font-smoothing:antialiased}
-    a{color:inherit}
-    /* matrix */
-    #matrix-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.16}
-    .scanlines{position:fixed;inset:0;z-index:5;pointer-events:none;background:
-      linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%),
-      linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,255,0,0.01), rgba(0,0,255,0.02));
-      background-size:100% 4px,3px 100%}
-    /* top nav */
-    .topbar{position:fixed;left:0;right:0;top:12px;display:flex;justify-content:space-between;align-items:center;padding:10px 24px;z-index:120;pointer-events:none}
-    .brand{pointer-events:auto;display:flex;align-items:center;gap:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-    .brand .logo{font-weight:800;color:var(--cyber-blue)}
-    .navlinks{pointer-events:auto;display:flex;gap:10px;align-items:center}
-    .navlinks a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px}
-    .navlinks a:hover{background:rgba(255,255,255,0.02);color:var(--cyber-blue)}
-    .resume-btn{background:linear-gradient(90deg,var(--cyber-blue),#7cffb2);color:#02111a;font-weight:700;border-radius:10px;padding:8px 12px;border:none;cursor:pointer}
-    /* hero/terminal layout */
-    header.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:68px 6vw;position:relative;z-index:60}
-    .frame{max-width:1180px;width:100%;display:grid;grid-template-columns:1fr 480px;gap:26px;align-items:start}
-    .card{background:rgba(10,10,10,0.86);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-    .hero-left h1{font-size:40px;margin:0;color:var(--cyber-blue)}
-    .muted{color:var(--muted);line-height:1.6}
-    /* terminal */
-    .term{font-family:"Fira Code",monospace;font-size:13px;background:linear-gradient(180deg,#001018,#000814);color:#c4fbff;padding:14px;border-radius:10px;min-height:340px;display:flex;flex-direction:column}
-    .term-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-    .dot{width:12px;height:12px;border-radius:50%}
-    .dot.red{background:#ff6b6b} .dot.yellow{background:#ffd166} .dot.green{background:#7cffb2}
-    .term-body{flex:1;overflow:auto;padding:6px 4px}
-    .term-line{white-space:pre-wrap;line-height:1.45}
-    .term-cmd{color:#9ff7ff}
-    .term-out{color:var(--muted);font-family:Inter,system-ui,Arial}
-    /* modal */
-    #cv-modal{display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,0.9);padding:22px;backdrop-filter:blur(8px)}
-    .modal-inner{max-width:1100px;margin:auto;background:rgba(8,10,12,0.96);padding:12px;border-radius:10px;height:86vh;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.03)}
-    .modal-toolbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .small-btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted);cursor:pointer}
-    .small-btn:hover{background:rgba(255,255,255,0.02);color:var(--cyber-blue)}
-    /* contact */
-    input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:12px;border-radius:8px;color:inherit}
-    /* reveal */
-    .card{opacity:0;transform:translateY(8px);transition:all .6s cubic-bezier(.2,.9,.2,1)}
-    .card.visible{opacity:1;transform:none}
-    /* responsive */
-    @media (max-width:980px){
-      .frame{grid-template-columns:1fr}
-      .navlinks{display:none}
-      .navlinks.mobile-open{display:flex;position:fixed;left:12px;right:12px;top:60px;background:rgba(0,0,0,0.9);padding:12px;border-radius:8px;flex-direction:column;gap:8px;z-index:210}
-    }
-  </style>
+<title>Kaushal Dholakiya | Cybersecurity Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:"Fira Code",monospace;
+background:#02030a;
+color:#d0e8ef;
+overflow-x:hidden;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+opacity:.15;
+}
+
+/* NAV */
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+background:#000;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:100;
+}
+
+nav a{
+color:#00f3ff;
+margin:0 10px;
+text-decoration:none;
+}
+
+nav a:hover{
+color:#00ff41;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.hero h1{
+font-size:60px;
+color:#00f3ff;
+}
+
+.hero p{
+color:#9ff7ff;
+}
+
+/* BUTTONS */
+
+.btn{
+padding:10px 20px;
+border:1px solid #00f3ff;
+color:#00f3ff;
+margin:5px;
+text-decoration:none;
+}
+
+.btn:hover{
+background:#00f3ff;
+color:#000;
+}
+
+/* SECTIONS */
+
+section{
+max-width:1100px;
+margin:auto;
+padding:80px 20px;
+}
+
+h2{
+color:#00f3ff;
+margin-bottom:20px;
+}
+
+/* PROJECT CARDS */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:#05070f;
+padding:20px;
+border:1px solid #111;
+}
+
+.card h3{
+color:#00ff41;
+}
+
+/* TERMINAL */
+
+.terminal{
+background:#000;
+padding:15px;
+height:300px;
+overflow:auto;
+border:1px solid #00f3ff;
+}
+
+.line{
+margin:4px 0;
+}
+
+/* CONTACT */
+
+input,textarea{
+width:100%;
+padding:10px;
+background:#000;
+border:1px solid #333;
+color:white;
+margin-bottom:10px;
+}
+
+/* MODAL */
+
+#cv-modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.9);
+}
+
+#cv-modal iframe{
+width:80%;
+height:90%;
+margin:5% auto;
+display:block;
+}
+
+</style>
 </head>
+
 <body>
 
-  <!-- loader -->
-  <div id="loader" role="status" aria-live="polite" class="loader-screen" style="z-index:300">
-    <div style="max-width:880px;width:94%;padding:20px;border-radius:12px;background:rgba(0,0,0,0.9);border:1px solid rgba(255,255,255,0.03);text-align:left;color:var(--cyber-blue)">
-      <div style="font-weight:800;font-family:monospace;font-size:20px;margin-bottom:8px">INITIALIZING KD-HACKER ENV</div>
-      <div id="loaderStatus" style="color:var(--muted);font-size:13px;margin-bottom:8px">• booting</div>
-      <div style="height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-bottom:6px"><div id="loaderBar" style="height:100%;width:0;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green));"></div></div>
-      <div style="color:var(--muted);font-size:12px">Press <kbd style="padding:3px 6px;background:#000;border-radius:6px;color:var(--cyber-blue)">Esc</kbd> to skip</div>
-    </div>
-  </div>
+<canvas id="matrix"></canvas>
 
-  <!-- background -->
-  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-  <div class="scanlines" aria-hidden="true"></div>
+<nav>
 
-  <!-- topbar -->
-  <div class="topbar" role="navigation" aria-label="main">
-    <div class="brand" title="Kaushal (KD)">
-      <div class="logo">&lt;KD/&gt;</div>
-      <div style="font-size:13px;color:var(--muted)">kaushaldholakiya4.com</div>
-    </div>
+<div>&lt;KD/&gt;</div>
 
-    <nav id="navLinks" class="navlinks" aria-hidden="false">
-      <a href="#about">Profile</a>
-      <a href="#skills">Arsenal</a>
-      <a href="#projects">Missions</a>
-      <a href="#contact">Connect</a>
-      <button id="openCvBtnTop" class="resume-btn">Resume</button>
-    </nav>
+<div>
 
-    <div style="pointer-events:auto">
-      <button id="mobileMenuBtn" class="small-btn md:hidden" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
-    </div>
-  </div>
+<a href="#about">About</a>
+<a href="#skills">Skills</a>
+<a href="#projects">Projects</a>
+<a href="#details">Project Details</a>
+<a href="#contact">Contact</a>
 
-  <!-- hero -->
-  <header class="hero">
-    <div class="frame" role="region" aria-label="Hero">
-      <div class="card hero-left" id="heroCard">
-        <h1>Kaushal Dholakiya</h1>
-        <p class="muted">Penetration Tester • VAPT Analyst • Cybersecurity & AI</p>
+</div>
 
-        <p class="muted" style="margin-top:12px">
-          I build secure systems, perform VAPT, and integrate AI & automation to speed up security analysis. Active on Hack The Box and TryHackMe.
-        </p>
+</nav>
 
-        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
-          <a class="small-btn" id="emailBtn" href="mailto:kaushaldholakiya4@gmail.com"><i class="fa fa-envelope"></i> Email</a>
-          <button class="small-btn" id="openCvBtnHero"><i class="fa fa-file-pdf"></i> View Resume</button>
-          <a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-          <button class="small-btn" id="copyPhoneBtn"><i class="fa fa-phone"></i> Copy Phone</button>
-        </div>
+<!-- HERO -->
 
-        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="small-btn" id="htbBtn"><i class="fa fa-shield"></i> HTB: KD-2004</button>
-          <button class="small-btn" id="thmBtn"><i class="fa fa-shield-alt"></i> THM: KD234</button>
-          <a class="small-btn" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
-        </div>
-      </div>
+<div class="hero">
 
-      <div class="card term" aria-live="polite" aria-atomic="false">
-        <div class="term-head">
-          <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-          <div style="margin-left:auto;color:var(--muted);font-size:13px">kd@portfolio:~$</div>
-        </div>
-        <div class="term-body" id="termBody" role="log"></div>
-        <div style="font-size:12px;color:var(--muted);padding-top:8px">Interactive terminal — click to run a demo command</div>
-      </div>
-    </div>
-  </header>
+<h1>Kaushal Dholakiya</h1>
 
-  <!-- main sections -->
-  <main class="relative z-40">
-    <section id="about" class="card" style="margin:24px auto;max-width:1100px">
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
-        <h2 style="margin:0;font-size:20px">_Profile_Summary</h2>
-      </div>
-      <div class="terminal-box p-6 rounded-lg relative overflow-hidden">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-          <div style="color:var(--muted);font-size:13px">
-            <div>USER: <strong style="color:var(--neon-green)">kaushaldholakiya4</strong></div>
-            <div>HTB: <strong style="color:var(--neon-green)">KD-2004</strong></div>
-            <div>THM: <strong style="color:var(--neon-green)">KD234</strong></div>
-          </div>
-          <div style="color:var(--muted);font-size:13px;text-align:right">
-            <div>LOC: Mumbai, MH</div>
-            <div>UID: 2004-03-02</div>
-          </div>
-        </div>
+<p>Penetration Tester | Cybersecurity | AI Systems</p>
 
-        <p style="color:#d0e8ef;line-height:1.45">
-          <strong style="color:var(--neon-green)">kaushal@kali:~$</strong> cat profile.txt<br><br>
-          VAPT Analyst and Penetration Tester with hands-on experience in web, network, and system security testing. Skilled in vulnerability assessment, exploitation, and security auditing using Burp Suite, Nmap, Metasploit, SQLmap and OWASP ZAP.
-        </p>
-      </div>
-    </section>
+<div>
 
-    <section id="skills" class="card" style="margin:24px auto;max-width:1100px">
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
-        <h2 style="margin:0;font-size:20px">_Arsenal_&_Skills</h2>
-      </div>
+<a class="btn" href="mailto:kaushaldholakiya4@gmail.com">Email</a>
 
-      <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
-        <div class="card">
-          <h3 style="color:var(--neon-green);margin-bottom:8px">Offensive Security</h3>
-          <div style="color:var(--muted);font-size:14px">VAPT, OWASP Top 10, CVE analysis, PoC development</div>
-        </div>
-        <div class="card">
-          <h3 style="color:var(--cyber-blue);margin-bottom:8px">Tools & Frameworks</h3>
-          <div style="color:var(--muted);font-size:14px">Burp Suite, Nmap, Metasploit, SQLmap, OWASP ZAP, Wireshark, Hashcat</div>
-        </div>
-        <div class="card">
-          <h3 style="color:#d6a6ff;margin-bottom:8px">Engineering & Code</h3>
-          <div style="color:var(--muted);font-size:14px">Python, Bash, SQL, C++, Java — automation & tooling</div>
-        </div>
-      </div>
-    </section>
+<a class="btn" onclick="openCV()">Resume</a>
 
-    <section id="projects" class="card" style="margin:24px auto;max-width:1100px">
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
-        <h2 style="margin:0;font-size:20px">_Mission_Operations</h2>
-      </div>
+<a class="btn" href="https://github.com/KD-2004" target="_blank">GitHub</a>
 
-      <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-family:monospace;color:var(--muted);font-size:12px">Project_01</span>
-            <div style="display:flex;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#ff6b6b;display:inline-block"></span><span style="width:9px;height:9px;border-radius:50%;background:#ffd166;display:inline-block"></span><span style="width:9px;height:9px;border-radius:50%;background:#7cffb2;display:inline-block"></span></div>
-          </div>
-          <h3 style="margin-top:8px">LearnMate — AI Assistant Platform</h3>
-          <p style="color:var(--muted);font-size:14px">OCR, document understanding, secure auth, and careful input validation. Tested against OWASP Top 10.</p>
-          <div style="margin-top:10px"><a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener">View on GitHub</a></div>
-        </div>
+<a class="btn" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank">LinkedIn</a>
 
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-family:monospace;color:var(--muted);font-size:12px">Project_02</span>
-            <div style="display:flex;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#7cffb2;display:inline-block"></span></div>
-          </div>
-          <h3 style="margin-top:8px">CyberSense — AV Scanner</h3>
-          <p style="color:var(--muted);font-size:14px">Multi-engine malware analysis system for consolidated reporting.</p>
-          <div style="margin-top:10px"><a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener">View on GitHub</a></div>
-        </div>
-      </div>
-    </section>
+</div>
 
-    <section id="contact" class="card" style="margin:24px auto 64px;max-width:900px">
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
-        <h2 style="margin:0;font-size:20px">_Secure_Channel</h2>
-      </div>
+</div>
 
-      <div class="terminal-box p-6 rounded-lg">
-        <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
-          <div>
-            <div style="color:var(--muted);font-size:13px;margin-bottom:8px">// CONNECTION_INFO</div>
-            <div style="color:var(--muted)"><div><i class="fa fa-map-marker-alt text-green-400"></i> Mumbai, Maharashtra</div><div style="margin-top:6px"><i class="fa fa-phone-alt text-green-400"></i> +91 8104451162</div><div style="margin-top:6px"><i class="fa fa-at text-green-400"></i> kaushaldholakiya4@gmail.com</div></div>
-          </div>
+<!-- ABOUT -->
 
-          <div style="border-left:1px solid rgba(255,255,255,0.02);padding-left:12px">
-            <div style="color:var(--muted);font-size:12px;margin-bottom:8px">ENCRYPTION: AES-256-GCM</div>
-            <div style="color:var(--muted);font-size:12px">STATUS: LISTENING...</div>
-          </div>
-        </div>
+<section id="about">
 
-        <form id="contactForm" style="margin-top:14px" onsubmit="return false;">
-          <input id="cf_name" type="text" placeholder="Your name" required style="width:100%;margin-bottom:8px" />
-          <input id="cf_email" type="email" placeholder="you@domain.com" required style="width:100%;margin-bottom:8px" />
-          <textarea id="cf_msg" rows="4" placeholder="Your message" required style="width:100%;margin-bottom:8px"></textarea>
+<h2>Profile Summary</h2>
 
-          <div style="display:flex;gap:8px">
-            <button id="sendMailBtn" type="button" class="resume-btn" style="flex:1">Initiate Handshake (Open Mail)</button>
-            <button id="saveBtn" type="button" class="small-btn" style="width:140px">Save Locally</button>
-          </div>
-          <div id="cf_status" style="color:var(--neon-green);font-size:13px;margin-top:8px;display:none"></div>
-        </form>
-      </div>
-    </section>
-  </main>
+<p>
 
-  <!-- CV Modal -->
-  <div id="cv-modal" aria-hidden="true">
-    <div class="modal-inner">
-      <div class="modal-toolbar">
-        <div>
-          <strong style="color:var(--cyber-blue)">RESUME VIEWER</strong>
-          <div style="font-size:12px;color:var(--muted)">Kaushal_cv.pdf</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <a id="downloadCv" class="small-btn" href="Kaushal_cv.pdf" download><i class="fa fa-download"></i> Download</a>
-          <button id="closeCvBtn" class="small-btn"><i class="fa fa-times"></i> Close</button>
-        </div>
-      </div>
+I am a cybersecurity enthusiast focused on vulnerability assessment,
+penetration testing, and security research.
 
-      <div style="flex:1;overflow:auto;margin-top:12px">
-        <!-- Attempt iframe preview; on browsers that block inline PDF preview the download button still works -->
-        <iframe id="cvFrame" src="Kaushal_cv.pdf" style="width:100%;height:78vh;border:none;border-radius:6px;"></iframe>
-        <noscript style="color:var(--muted)">PDF preview requires JavaScript-enabled browser — use the Download button above.</noscript>
-      </div>
-    </div>
-  </div>
+My work involves understanding system internals, identifying weaknesses,
+and building tools to improve security defenses.
 
-  <footer style="padding:28px;text-align:center;color:var(--muted);font-size:12px">© <span id="year"></span> KAUSHAL DHOLAKIYA — kaushaldholakiya4</footer>
+Alongside cybersecurity I build advanced systems involving
+artificial intelligence, automation, and robotics.
 
-  <!-- SCRIPT (at bottom so DOM elements exist) -->
-  <script>
-    (function(){
-      // PROFILE values from your CV
-      const PROFILE = {
-        email: 'kaushaldholakiya4@gmail.com',
-        phone: '+91 8104451162',
-        github: 'https://github.com/KD-2004',
-        linkedin: 'https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/',
-        htbSearch: 'https://www.google.com/search?q=HackTheBox+KD-2004',
-        thm: 'https://tryhackme.com/p/KD234',
-        resume: 'Kaushal_cv.pdf'
-      };
+My projects explore AI assistants, malware analysis systems,
+machine learning fraud detection, and autonomous robotics.
 
-      // SHOW YEAR
-      document.getElementById('year').textContent = new Date().getFullYear();
+My long-term goal is to become a security researcher capable
+of building intelligent cybersecurity tools.
 
-      /* ---------- LOADER ---------- */
-      const loader = document.getElementById('loader');
-      const loaderBar = document.getElementById('loaderBar');
-      const loaderStatus = document.getElementById('loaderStatus');
-      (async function bootSequence(){
-        const steps = ['initializing ai-core','mounting security modules','warming matrix','loading terminal','syncing projects','finalizing visuals'];
-        for(let i=0;i<steps.length;i++){
-          loaderStatus.textContent = '• ' + steps[i];
-          loaderBar.style.width = Math.round(((i+1)/steps.length)*100) + '%';
-          await new Promise(r=>setTimeout(r, 420 + Math.random()*520));
-        }
-        // hide
-        loader.style.transition = 'opacity .45s ease';
-        loader.style.opacity = 0;
-        setTimeout(()=> loader.style.display = 'none', 420);
-      })();
-      window.addEventListener('keydown', (e)=> { if(e.key === 'Escape') loader.style.display = 'none'; });
+</p>
 
-      /* ---------- MATRIX ---------- */
-      const canvas = document.getElementById('matrix-canvas');
-      const ctx = canvas.getContext('2d');
-      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
-      let fontSize, columns, drops;
-      function resizeMatrix(){
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        fontSize = Math.max(12, Math.floor(window.innerWidth/120));
-        columns = Math.floor(canvas.width / fontSize);
-        drops = new Array(columns).fill(1);
-        ctx.font = fontSize + 'px monospace';
-      }
-      window.addEventListener('resize', resizeMatrix);
-      resizeMatrix();
-      function drawMatrix(){
-        ctx.fillStyle = 'rgba(0,0,0,0.12)';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = 'rgba(0,212,255,0.85)';
-        ctx.font = fontSize + 'px monospace';
-        for(let i=0;i<drops.length;i++){
-          const text = letters[Math.floor(Math.random()*letters.length)];
-          ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-          if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-          drops[i]++;
-        }
-      }
-      const matrixInterval = setInterval(drawMatrix, 33);
+</section>
 
-      /* ---------- TERMINAL ---------- */
-      const termBody = document.getElementById('termBody');
-      const TERM_LINES = [
-        {cmd:'whoami', out:'Kaushal'},
-        {cmd:'date', out: new Date().toString()},
-        {cmd:'uname -a', out:'Linux kd-vm 5.x x86_64 GNU/Linux'},
-        {cmd:'nmap -sC -sV 10.10.10.0/24', out:'10.10.10.12 ssh | 10.10.10.22 http (nginx)'},
-        {cmd:'python3 poc.py --target 10.10.10.22', out:'[+] PoC simulated: CVE-2024-XXXX (demo)'},
-        {cmd:'cat resume_meta.txt', out:`EMAIL: ${PROFILE.email} | HTB: KD-2004 | THM: KD234`}
-      ];
+<!-- TERMINAL -->
 
-      let tIndex=0;
-      async function typeLine(text, cls='term-cmd'){
-        const line = document.createElement('div');
-        line.className = 'term-line ' + cls;
-        termBody.appendChild(line);
-        for(let ch of text){
-          line.textContent += ch;
-          await new Promise(r=>setTimeout(r, 10 + Math.random()*18));
-          termBody.scrollTop = termBody.scrollHeight;
-        }
-      }
-      (async function terminalLoop(){
-        try{
-          while(true){
-            const item = TERM_LINES[tIndex % TERM_LINES.length];
-            await typeLine('kd@portfolio:~$ ' + item.cmd, 'term-cmd');
-            await new Promise(r=>setTimeout(r, 200 + Math.random()*600));
-            await typeLine(item.out, 'term-out');
-            tIndex++;
-            if(termBody.childElementCount > 28){
-              while(termBody.childElementCount > 20) termBody.removeChild(termBody.firstChild);
-            }
-            await new Promise(r=>setTimeout(r, 700 + Math.random()*1200));
-          }
-        }catch(e){ console.error(e) }
-      })();
+<section>
 
-      // Click terminal to inject demo
-      document.querySelectorAll('.term').forEach(el => {
-        el.addEventListener('click', async ()=>{
-          await typeLine('kd@portfolio:~$ echo "demo run"', 'term-cmd');
-          await new Promise(r=>setTimeout(r,200));
-          await typeLine('demo output: terminal command simulated', 'term-out');
-        });
-      });
+<h2>Security Console</h2>
 
-      /* ---------- CV modal ---------- */
-      const cvModal = document.getElementById('cv-modal');
-      const cvFrame = document.getElementById('cvFrame');
-      const openCvBtnTop = document.getElementById('openCvBtnTop');
-      const openCvBtnHero = document.getElementById('openCvBtnHero');
-      const closeCvBtn = document.getElementById('closeCvBtn');
-      const downloadCv = document.getElementById('downloadCv');
+<div class="terminal" id="terminal"></div>
 
-      function openCvModal(){
-        try{ cvFrame.src = PROFILE.resume; }catch(e){}
-        cvModal.style.display = 'block';
-        cvModal.setAttribute('aria-hidden','false');
-      }
-      function closeCvModal(){
-        cvModal.style.display = 'none';
-        cvModal.setAttribute('aria-hidden','true');
-      }
+</section>
 
-      if(openCvBtnTop) openCvBtnTop.addEventListener('click', openCvModal);
-      if(openCvBtnHero) openCvBtnHero.addEventListener('click', openCvModal);
-      if(closeCvBtn) closeCvBtn.addEventListener('click', closeCvModal);
-      if(downloadCv) downloadCv.setAttribute('href', PROFILE.resume);
+<!-- SKILLS -->
 
-      /* ---------- CONTACT form ---------- */
-      const sendMailBtn = document.getElementById('sendMailBtn');
-      const saveBtn = document.getElementById('saveBtn');
-      const cfStatus = document.getElementById('cf_status');
+<section id="skills">
 
-      function showCFStatus(txt, ok=true){
-        cfStatus.style.display = 'block';
-        cfStatus.style.color = ok ? '#9ff7ff' : '#ff9a9a';
-        cfStatus.textContent = txt;
-        setTimeout(()=> cfStatus.style.display = 'none', 6000);
-      }
+<h2>Skills</h2>
 
-      sendMailBtn.addEventListener('click', ()=>{
-        const name = document.getElementById('cf_name').value.trim();
-        const email = document.getElementById('cf_email').value.trim();
-        const msg = document.getElementById('cf_msg').value.trim();
-        if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
-        if(!/^\S+@\S+\.\S+$/.test(email)){ showCFStatus('Invalid email address', false); return; }
-        const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
-        stored.push({name,email,msg,ts:Date.now()});
-        localStorage.setItem('kd_contacts', JSON.stringify(stored));
-        const subject = encodeURIComponent('Portfolio contact from ' + name);
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}\n\n--\nSent via portfolio`);
-        window.location.href = `mailto:${PROFILE.email}?subject=${subject}&body=${body}`;
-        showCFStatus('Opening your default mail client...', true);
-      });
+<ul>
 
-      saveBtn.addEventListener('click', ()=>{
-        const name = document.getElementById('cf_name').value.trim();
-        const email = document.getElementById('cf_email').value.trim();
-        const msg = document.getElementById('cf_msg').value.trim();
-        if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
-        const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
-        stored.push({name,email,msg,ts:Date.now()});
-        localStorage.setItem('kd_contacts', JSON.stringify(stored));
-        showCFStatus('Saved locally. Use mail button to send.', true);
-      });
+<li>Vulnerability Assessment & Penetration Testing</li>
+<li>OWASP Top 10 Security Testing</li>
+<li>Web Application Security</li>
+<li>Network Security</li>
+<li>Malware Analysis Concepts</li>
+<li>AI Application Development</li>
+<li>Machine Learning Systems</li>
+<li>Python Automation</li>
 
-      /* ---------- Copy phone & small actions ---------- */
-      const copyPhoneBtn = document.getElementById('copyPhoneBtn');
-      if(copyPhoneBtn) copyPhoneBtn.addEventListener('click', ()=> {
-        navigator.clipboard?.writeText(PROFILE.phone).then(()=> alert('Phone copied: ' + PROFILE.phone)).catch(()=> prompt('Copy phone', PROFILE.phone));
-      });
+</ul>
 
-      // mobile menu toggle
-      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-      const navLinks = document.getElementById('navLinks');
-      mobileMenuBtn.addEventListener('click', ()=>{
-        navLinks.classList.toggle('mobile-open');
-      });
+</section>
 
-      // HTB / THM open actions
-      const htbBtn = document.getElementById('htbBtn');
-      const thmBtn = document.getElementById('thmBtn');
-      if(htbBtn) htbBtn.addEventListener('click', () => window.open(PROFILE.htbSearch,'_blank'));
-      if(thmBtn) thmBtn.addEventListener('click', () => window.open(PROFILE.thm,'_blank'));
+<!-- PROJECTS -->
 
-      // reveal cards
-      window.addEventListener('load', ()=> document.querySelectorAll('.card').forEach((c,i)=> setTimeout(()=> c.classList.add('visible'), i*70)));
-    })();
-  </script>
+<section id="projects">
+
+<h2>Projects</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>LearnMate AI Assistant</h3>
+<p>AI assistant platform with OCR, document analysis and secure authentication.</p>
+</div>
+
+<div class="card">
+<h3>CyberSense Antivirus Scanner</h3>
+<p>Multi engine malware scanning tool.</p>
+</div>
+
+<div class="card">
+<h3>MovieMate Recommendation AI</h3>
+<p>AI movie recommendation system using language models.</p>
+</div>
+
+<div class="card">
+<h3>CreditGuard Fraud Detection</h3>
+<p>Machine learning system detecting fraudulent transactions.</p>
+</div>
+
+<div class="card">
+<h3>InfiWasTex Waste Robot</h3>
+<p>Autonomous robot detecting and collecting waste.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- PROJECT DETAILS -->
+
+<section id="details">
+
+<h2>Project Details</h2>
+
+<h3>LearnMate</h3>
+<p>
+Flask based AI assistant with document understanding,
+OCR extraction, and secure authentication.
+</p>
+
+<h3>CyberSense</h3>
+<p>
+Malware analysis tool comparing multiple antivirus engines
+to improve detection accuracy.
+</p>
+
+<h3>MovieMate</h3>
+<p>
+AI recommendation system using machine learning
+and web scraping for dynamic movie data.
+</p>
+
+<h3>CreditGuard</h3>
+<p>
+Fraud detection using machine learning models
+including Logistic Regression and Random Forest.
+</p>
+
+<h3>InfiWasTex</h3>
+<p>
+Robotics project combining YOLO object detection,
+SLAM navigation and robotic manipulation.
+</p>
+
+</section>
+
+<!-- CONTACT -->
+
+<section id="contact">
+
+<h2>Contact</h2>
+
+<input id="email" placeholder="Your Email">
+
+<textarea id="msg" placeholder="Message"></textarea>
+
+<button onclick="sendMail()">Send</button>
+
+</section>
+
+<!-- CV MODAL -->
+
+<div id="cv-modal">
+
+<iframe src="Kaushal_cv.pdf"></iframe>
+
+</div>
+
+<script>
+
+/* MATRIX */
+
+const canvas=document.getElementById("matrix")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+const letters="01"
+
+const font=14
+
+const columns=canvas.width/font
+
+const drops=Array(Math.floor(columns)).fill(1)
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,.05)"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="#00f3ff"
+ctx.font=font+"px monospace"
+
+for(let i=0;i<drops.length;i++){
+
+const text=letters[Math.floor(Math.random()*letters.length)]
+
+ctx.fillText(text,i*font,drops[i]*font)
+
+if(drops[i]*font>canvas.height&&Math.random()>.975) drops[i]=0
+
+drops[i]++
+
+}
+
+}
+
+setInterval(draw,33)
+
+/* TERMINAL */
+
+const terminal=document.getElementById("terminal")
+
+const lines=[
+"whoami",
+"Kaushal",
+"Running security scan...",
+"Scanning network...",
+"Ports discovered: 22,80,443",
+"Running exploit simulation...",
+"Access granted",
+]
+
+let i=0
+
+function type(){
+
+if(i<lines.length){
+
+const div=document.createElement("div")
+
+div.className="line"
+
+div.textContent=lines[i]
+
+terminal.appendChild(div)
+
+terminal.scrollTop=terminal.scrollHeight
+
+i++
+
+}
+
+}
+
+setInterval(type,1200)
+
+/* CONTACT */
+
+function sendMail(){
+
+const email=document.getElementById("email").value
+
+const msg=document.getElementById("msg").value
+
+window.location.href=
+`mailto:kaushaldholakiya4@gmail.com?subject=Portfolio Contact&body=${msg}`
+
+}
+
+/* CV */
+
+function openCV(){
+
+document.getElementById("cv-modal").style.display="block"
+
+}
+
+</script>
 
 </body>
 </html>
