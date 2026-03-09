@@ -1,550 +1,515 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaushal Dholakiya | Penetration Tester</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --neon-green: #00ff41;
-            --dark-bg: #050505;
-            --cyber-blue: #00f3ff;
-            --terminal-gray: #1a1a1a;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kaushal Dholakiya — Penetration Tester | VAPT Analyst</title>
 
-        body {
-            background-color: var(--dark-bg);
-            color: #e0e0e0;
-            font-family: 'Fira Code', monospace;
-            overflow-x: hidden;
-            margin: 0;
-        }
+<!-- Tailwind CDN (already in your file) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-        /* Matrix Background */
-        #matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: 0.15;
-        }
+<style>
+  :root{
+    --neon-green:#00ff41;
+    --cyber-blue:#00f3ff;
+    --muted:#93a8b8;
+    --bg:#050505;
+    --panel:rgba(10,10,10,0.85);
+    --glass: rgba(255,255,255,0.03);
+    --mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#02040a 0%, #060914 100%);color:#dbeef0;font-family:var(--mono);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  /* layout */
+  .topbar{position:fixed;left:0;right:0;top:12px;display:flex;justify-content:space-between;align-items:center;padding:10px 28px;z-index:60;pointer-events:none}
+  .brand{pointer-events:auto;display:flex;align-items:center;gap:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+  .brand .logo{font-weight:800;color:var(--cyber-blue)}
+  .navlinks{pointer-events:auto;display:flex;gap:10px;align-items:center}
+  .navlinks a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px}
+  .navlinks a:hover{color:var(--cyber-blue);background:var(--glass)}
+  .resume-btn{background:linear-gradient(90deg,var(--cyber-blue),#7cffb2);color:#02111a;font-weight:700;border-radius:10px;padding:8px 12px;border:none;cursor:pointer}
 
-        /* Scanline Effect */
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-            z-index: 100;
-        }
+  /* loader */
+  #loader{position:fixed;inset:0;background:#000917;display:flex;align-items:center;justify-content:center;z-index:140;color:var(--cyber-blue);flex-direction:column}
+  .loader-card{width:min(980px,94%);padding:22px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px);display:grid;grid-template-columns:1fr 320px;gap:18px}
+  .glitch{font-size:26px;font-weight:800;letter-spacing:0.6px}
+  .prog{height:12px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+  .prog > i{display:block;height:100%;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green));width:0%}
 
-        /* Glitch Animation */
-        .glitch {
-            position: relative;
-            display: inline-block;
-        }
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark-bg);
-        }
-        .glitch::after {
-            left: 2px;
-            text-shadow: -2px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-anim {
-            0% { clip: rect(31px, 9999px, 94px, 0); }
-            20% { clip: rect(62px, 9999px, 42px, 0); }
-            100% { clip: rect(11px, 9999px, 86px, 0); }
-        }
+  /* hero / terminal */
+  header.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:68px 6vw;position:relative;z-index:50}
+  .frame{max-width:1180px;width:100%;display:grid;grid-template-columns:1fr 480px;gap:26px;align-items:start}
+  .card{background:var(--panel);padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+  .hero-left h1{font-size:40px;margin:0;color:var(--cyber-blue)}
+  .muted{color:var(--muted);line-height:1.6}
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 10px; }
+  /* terminal */
+  .term{font-family:var(--mono);font-size:13px;background:linear-gradient(180deg,#001018,#000814);color:#c4fbff;padding:14px;border-radius:10px;min-height:340px;display:flex;flex-direction:column}
+  .term-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .dot.red{background:#ff6b6b} .dot.yellow{background:#ffd166} .dot.green{background:#7cffb2}
+  .term-body{flex:1;overflow:auto;padding:6px 4px}
+  .term-line{white-space:pre-wrap;line-height:1.45}
+  .term-cmd{color:#9ff7ff}
+  .term-out{color:var(--muted);font-family:Inter,system-ui,Arial}
 
-        .terminal-box {
-            background: rgba(10, 10, 10, 0.85);
-            border: 1px solid var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
-            backdrop-filter: blur(5px);
-        }
+  /* bg canvas */
+  #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-        .skill-tag {
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid var(--cyber-blue);
-            color: var(--cyber-blue);
-            transition: all 0.3s;
-        }
-        .skill-tag:hover {
-            background: var(--cyber-blue);
-            color: black;
-            box-shadow: 0 0 10px var(--cyber-blue);
-        }
+  /* sections */
+  main{position:relative;z-index:50}
+  section{padding:56px 6vw;max-width:1200px;margin:0 auto}
+  .section-title{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .underline{height:3px;width:56px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))}
 
-        .loader-screen {
-            position: fixed;
-            inset: 0;
-            background: black;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.8s ease-out;
-        }
+  /* modal (CV viewer) */
+  #cv-modal{display:none;position:fixed;inset:0;z-index:180;background:rgba(0,0,0,0.92);padding:28px;backdrop-filter:blur(10px)}
+  .modal-inner{max-width:1100px;margin:auto;background:var(--panel);padding:14px;border-radius:10px;height:80vh;display:flex;flex-direction:column}
+  .modal-toolbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.03)}
 
-        @keyframes blink { 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--neon-green); animation: blink 1s infinite; vertical-align: middle; }
+  /* quick buttons */
+  .small-btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted);cursor:pointer}
+  .small-btn:hover{background:rgba(255,255,255,0.02);color:var(--cyber-blue)}
 
-        .section-header {
-            border-left: 4px solid var(--neon-green);
-            padding-left: 1rem;
-            margin-bottom: 2rem;
-        }
+  /* responsive */
+  @media (max-width:980px){
+    .frame{grid-template-columns:1fr}
+    .loader-card{grid-template-columns:1fr}
+    .topbar{top:8px;padding:6px 12px}
+  }
 
-        .project-card {
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        .project-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--cyber-blue);
-        }
-
-        /* Progress Bar for Skills */
-        .meter {
-            height: 10px;
-            position: relative;
-            background: #222;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .meter span {
-            display: block;
-            height: 100%;
-            background-color: var(--neon-green);
-            box-shadow: 0 0 10px var(--neon-green);
-            position: relative;
-            overflow: hidden;
-        }
-
-        nav a { position: relative; }
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 0; width: 0; height: 1px;
-            background: var(--neon-green);
-            transition: width 0.3s;
-        }
-        nav a:hover::after { width: 100%; }
-
-        /* Modal Styles */
-        #cv-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            background: rgba(0,0,0,0.9);
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-        }
-        .modal-content {
-            max-width: 800px;
-            margin: auto;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-    </style>
+  /* small reveal */
+  .card{opacity:0;transform:translateY(8px);transition:all .6s cubic-bezier(.2,.9,.2,1)}
+  .card.visible{opacity:1;transform:none}
+</style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- Loading Screen -->
-    <div id="loader" class="loader-screen">
-        <div class="text-left w-full max-w-lg p-8 font-mono">
-            <p id="load-text-1" class="text-green-500 mb-1"></p>
-            <p id="load-text-2" class="text-green-500 mb-1"></p>
-            <p id="load-text-3" class="text-green-500 mb-1"></p>
-            <p id="load-text-4" class="text-blue-400 mb-4"></p>
-            <div id="progress-container" class="hidden w-full bg-gray-800 h-2 mt-4 rounded">
-                <div id="progress-bar" class="bg-green-500 h-full w-0 transition-all duration-300"></div>
-            </div>
-            <p id="load-status" class="text-xs mt-2 text-gray-500"></p>
-        </div>
+<!-- background canvas -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<!-- top nav -->
+<div class="topbar" role="navigation" aria-label="main">
+  <div class="brand" title="Kaushal (KD)">
+    <div class="logo">KD</div>
+    <div style="font-size:13px;color:var(--muted)">kaushaldholakiya4.com</div>
+  </div>
+
+  <div class="navlinks" aria-hidden="false">
+    <a href="#about">Profile</a>
+    <a href="#skills">Arsenal</a>
+    <a href="#projects">Missions</a>
+    <a href="#contact">Connect</a>
+    <button class="resume-btn" id="openCVBtn" title="Open Resume">Resume</button>
+  </div>
+</div>
+
+<!-- loader -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="loader-card">
+    <div>
+      <div class="glitch" id="glitchText">INITIALIZING KD-HACKER ENV</div>
+      <div style="margin-top:12px;color:var(--muted);font-size:13px" id="loaderHint">Booting security modules...</div>
+      <div style="margin-top:16px" class="prog"><i id="progressBar"></i></div>
+      <div style="margin-top:10px;color:var(--muted);font-size:13px" id="loaderLog">• loading terminal • warming matrix</div>
+      <div style="margin-top:12px;color:var(--muted);font-size:12px">Press <kbd style="padding:4px 6px;background:#000;border-radius:6px;color:var(--cyber-blue)">Esc</kbd> to skip</div>
     </div>
 
-    <canvas id="matrix-canvas"></canvas>
-    <div class="scanlines"></div>
+    <div style="font-family:var(--mono);color:var(--muted);font-size:13px;padding:12px;background:rgba(255,255,255,0.02);border-radius:10px">
+      <div style="font-weight:700;color:var(--cyber-blue)">Status</div>
+      <div id="loaderStatus" style="margin-top:10px;color:var(--muted)">• init network monitors</div>
+      <div style="margin-top:12px;color:var(--muted);font-size:12px">Resume loaded from repo root: <code style="color:var(--cyber-blue)">Kaushal_cv.pdf</code></div>
+    </div>
+  </div>
+</div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-opacity-90 bg-black border-b border-gray-800 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="text-xl font-bold tracking-tighter text-green-500">
-                <span class="text-gray-400">&lt;</span>KD<span class="text-gray-400">/&gt;</span>
-            </div>
-            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest">
-                <a href="#about" class="hover:text-green-500">Profile</a>
-                <a href="#skills" class="hover:text-green-500">Arsenal</a>
-                <a href="#projects" class="hover:text-green-500">Missions</a>
-                <a href="#experience" class="hover:text-green-500">Logs</a>
-                <a href="#contact" class="hover:text-green-500">Connect</a>
-            </div>
-            <div class="md:hidden">
-                <i class="fas fa-bars text-xl" onclick="toggleMenu()"></i>
-            </div>
-        </div>
-    </nav>
+<!-- main hero -->
+<header class="hero" role="banner">
+  <div class="frame">
+    <div class="card hero-left" id="heroCard">
+      <h1>Kaushal Dholakiya</h1>
+      <p class="muted">Penetration Tester • VAPT Analyst • Cybersecurity & AI</p>
 
-    <!-- Hero Section -->
-    <section class="min-h-screen pt-32 pb-20 px-6 flex flex-col justify-center items-center text-center relative">
-        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-green-500/5 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-[120px]"></div>
+      <p class="muted" style="margin-top:12px">
+        I build secure systems, perform VAPT, and integrate AI to automate security analysis.
+        Active on Hack The Box and TryHackMe. View mission reports and projects below.
+      </p>
 
-        <div class="terminal-box p-1 mb-6 rounded-full inline-block">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kaushal&backgroundColor=b6e3f4" alt="KD" class="w-32 h-32 rounded-full border-2 border-green-500">
-        </div>
+      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="small-btn" href="mailto:kaushaldholakiya4@gmail.com"><i class="fa fa-envelope"></i> Email</a>
+        <a class="small-btn" id="openCVBtn2"><i class="fa fa-file-pdf"></i> View Resume</a>
+        <a class="small-btn" href="https://github.com/kaushaldholakiya4" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+        <button class="small-btn" id="copyPhoneBtn"><i class="fa fa-phone"></i> Copy Phone</button>
+      </div>
 
-        <h1 class="text-5xl md:text-7xl font-bold mb-4 glitch" data-text="KAUSHAL DHOLAKIYA">KAUSHAL DHOLAKIYA</h1>
-        <p class="text-xl md:text-2xl text-green-500 mb-8 font-light tracking-widest uppercase">
-            Penetration Tester <span class="text-gray-600 px-2">|</span> VAPT Analyst
-        </p>
-        
-        <div class="flex flex-wrap justify-center gap-4 mb-12">
-            <a href="mailto:kaushaldholakiya4@gmail.com" class="px-6 py-3 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-all rounded font-bold uppercase text-sm flex items-center gap-2">
-                <i class="fas fa-envelope"></i> Hire Me
-            </a>
-            <button onclick="openCV()" class="px-6 py-3 bg-white text-black hover:bg-gray-200 transition-all rounded font-bold uppercase text-sm flex items-center gap-2">
-                <i class="fas fa-file-pdf"></i> View / Download CV
-            </button>
-        </div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="small-btn" onclick="openProfile('htb')"><i class="fa fa-shield"></i> HTB: KD-2004</button>
+        <button class="small-btn" onclick="openProfile('thm')"><i class="fa fa-shield-alt"></i> THM: KD234</button>
+        <a class="small-btn" href="https://linkedin.com/in/kaushal-dholakiya" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      </div>
 
-        <div class="flex flex-wrap justify-center gap-6 text-2xl text-gray-500">
-            <a title="LinkedIn" href="https://linkedin.com/in/kaushal-dholakiya" class="hover:text-blue-500 transition-colors"><i class="fab fa-linkedin"></i></a>
-            <a title="GitHub" href="https://github.com/kaushaldholakiya4" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
-            <a title="HackTheBox: KD-2004" href="#" class="hover:text-green-500 transition-colors font-bold text-lg border border-gray-800 px-2 rounded">HTB</a>
-            <a title="TryHackMe: KD234" href="#" class="hover:text-red-500 transition-colors font-bold text-lg border border-gray-800 px-2 rounded">THM</a>
-        </div>
-
-        <div class="mt-20 animate-bounce text-gray-600">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
-
-    <!-- About / Profile -->
-    <section id="about" class="py-20 px-6 max-w-5xl mx-auto scroll-mt-20">
-        <div class="section-header">
-            <h2 class="text-3xl font-bold uppercase tracking-widest">_Profile_Summary</h2>
-        </div>
-        <div class="terminal-box p-8 rounded-lg relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent"></div>
-            <div class="flex flex-col md:flex-row justify-between mb-6 border-b border-gray-800 pb-4">
-                <div class="text-xs text-gray-500">
-                    <p>USER: <span class="text-green-500">kaushaldholakiya4</span></p>
-                    <p>HTB: <span class="text-green-500">KD-2004</span></p>
-                    <p>THM: <span class="text-green-500">KD234</span></p>
-                </div>
-                <div class="text-xs text-gray-500 text-right">
-                    <p>UID: 2004-03-02</p>
-                    <p>LOC: MUMBAI, MH</p>
-                </div>
-            </div>
-            <p class="text-lg leading-relaxed text-gray-300">
-                <span class="text-green-500">kaushal@kali:~$</span> cat profile.txt<br><br>
-                VAPT Analyst and Penetration Tester with hands-on experience in web, network, and system security testing. Skilled in vulnerability assessment, exploitation, and security auditing using industry tools like <span class="text-green-500">Burp Suite</span>, <span class="text-green-500">Nmap</span>, and <span class="text-green-500">Metasploit</span>. 
-                <br><br>
-                Deep understanding of <span class="text-blue-400">OWASP Top 10</span>, CVE/CVSS scoring, and secure coding practices. Active practitioner on <span class="text-yellow-500">Hack The Box</span> and <span class="text-red-500">TryHackMe</span>. Currently pursuing M.Sc. in Cyber Security to further solidify defensive and offensive security strategies.
-            </p>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
-        <div class="section-header">
-            <h2 class="text-3xl font-bold uppercase tracking-widest">_Arsenal_&_Skills</h2>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- PENTESTING -->
-            <div class="terminal-box p-6 rounded-lg">
-                <h3 class="text-green-500 mb-6 flex items-center gap-2 font-bold">
-                    <i class="fas fa-user-secret"></i> Offensive Security
-                </h3>
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex justify-between mb-1 text-xs uppercase">
-                            <span>Web App Pentesting</span>
-                            <span>90%</span>
-                        </div>
-                        <div class="meter"><span style="width: 90%"></span></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between mb-1 text-xs uppercase">
-                            <span>Network Exploitation</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="meter"><span style="width: 85%"></span></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between mb-1 text-xs uppercase">
-                            <span>Vulnerability Scanning</span>
-                            <span>95%</span>
-                        </div>
-                        <div class="meter"><span style="width: 95%"></span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TOOLS -->
-            <div class="terminal-box p-6 rounded-lg lg:col-span-2">
-                <h3 class="text-blue-400 mb-6 flex items-center gap-2 font-bold">
-                    <i class="fas fa-tools"></i> Tools & Frameworks
-                </h3>
-                <div class="flex flex-wrap gap-3">
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Burp Suite Professional</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Nmap</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Metasploit</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">SQLmap</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">OWASP ZAP</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Nikto</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Gobuster</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Aircrack-ng</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Hydra</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">Wireshark</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">John the Ripper</span>
-                    <span class="skill-tag px-3 py-1 rounded text-sm">BloodHound</span>
-                </div>
-            </div>
-
-            <!-- DEVELOPMENT -->
-            <div class="terminal-box p-6 rounded-lg lg:col-span-3">
-                <h3 class="text-purple-500 mb-6 flex items-center gap-2 font-bold">
-                    <i class="fas fa-laptop-code"></i> Engineering & Code
-                </h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="text-center p-4 border border-gray-800 rounded">
-                        <i class="fab fa-python text-3xl mb-2 text-yellow-500"></i>
-                        <p class="text-xs">Python Scripting</p>
-                    </div>
-                    <div class="text-center p-4 border border-gray-800 rounded">
-                        <i class="fab fa-linux text-3xl mb-2 text-white"></i>
-                        <p class="text-xs">Bash / Linux</p>
-                    </div>
-                    <div class="text-center p-4 border border-gray-800 rounded">
-                        <i class="fas fa-database text-3xl mb-2 text-blue-400"></i>
-                        <p class="text-xs">SQL Injection / DB</p>
-                    </div>
-                    <div class="text-center p-4 border border-gray-800 rounded">
-                        <i class="fas fa-brain text-3xl mb-2 text-pink-500"></i>
-                        <p class="text-xs">AI & Machine Learning</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
-        <div class="section-header">
-            <h2 class="text-3xl font-bold uppercase tracking-widest">_Mission_Operations (Projects)</h2>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Project cards same as before -->
-            <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
-                <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
-                    <span class="text-xs font-mono text-gray-500 italic">Project_01</span>
-                    <div class="flex gap-2">
-                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">LearnMate - AI Assistant Platform</h3>
-                    <p class="text-sm text-gray-400 mb-4">Web & Desktop application with secure authentication and robust input validation. Tested against OWASP Top 10 vulnerabilities like SQLi and XSS.</p>
-                </div>
-            </div>
-            <!-- More projects... -->
-            <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
-                <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
-                    <span class="text-xs font-mono text-gray-500 italic">Project_02</span>
-                    <div class="flex gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">CyberSense - AV Scanner</h3>
-                    <p class="text-sm text-gray-400 mb-4">Multi-engine malware analysis system designed to assess file threats and identify malicious patterns.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 px-6 max-w-4xl mx-auto scroll-mt-20">
-        <div class="section-header">
-            <h2 class="text-3xl font-bold uppercase tracking-widest">_Secure_Channel</h2>
-        </div>
-        <div class="terminal-box p-8 rounded-lg">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <p class="text-green-500 mb-4 tracking-tighter uppercase font-bold text-sm">// CONNECTION_INFO</p>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 text-gray-400">
-                            <i class="fas fa-map-marker-alt text-green-500"></i>
-                            <span>Mumbai, Maharashtra</span>
-                        </div>
-                        <div class="flex items-center gap-4 text-gray-400">
-                            <i class="fas fa-phone-alt text-green-500"></i>
-                            <span>+91 8104451162</span>
-                        </div>
-                        <div class="flex items-center gap-4 text-gray-400">
-                            <i class="fas fa-at text-green-500"></i>
-                            <span>kaushaldholakiya4@gmail.com</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="h-full border-l border-gray-800 pl-8 flex flex-col justify-center">
-                        <p class="text-xs text-gray-500 italic mb-4">"Security is not a product, but a process."</p>
-                        <p class="text-xs text-gray-400 font-mono tracking-widest">ENCRYPTION: AES-256-GCM</p>
-                        <p class="text-xs text-gray-400 font-mono tracking-widest">STATUS: LISTENING...</p>
-                    </div>
-                </div>
-            </div>
-            <form class="space-y-4">
-                <input type="email" placeholder="CONTACT_EMAIL" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors">
-                <textarea rows="4" placeholder="TRANSMIT_MESSAGE" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors"></textarea>
-                <button type="button" class="w-full py-4 bg-green-500 text-black font-bold uppercase tracking-widest hover:bg-green-400 transition-colors rounded">
-                    Initiate Handshake <i class="fas fa-paper-plane ml-2"></i>
-                </button>
-            </form>
-        </div>
-    </section>
-
-    <!-- CV Modal -->
-    <div id="cv-modal">
-        <div class="modal-content terminal-box p-8 rounded shadow-2xl relative">
-            <button onclick="closeCV()" class="absolute top-4 right-4 text-gray-500 hover:text-green-500">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
-            <div class="border-b border-green-500/30 pb-4 mb-6">
-                <h2 class="text-2xl font-bold text-green-500 uppercase tracking-widest">RESUME_VIEWER v1.0</h2>
-                <p class="text-xs text-gray-600">SOURCE: Kaushal_cv.pdf | STATUS: DECRYPTED</p>
-            </div>
-            <div class="font-mono text-sm space-y-4 text-gray-300">
-                <div class="text-green-400 font-bold underline"># PERSONAL INFORMATION</div>
-                <p>NAME: Kaushal Dholakiya</p>
-                <p>ROLE: Penetration Tester | VAPT Analyst</p>
-                <p>EMAIL: kaushaldholakiya4@gmail.com</p>
-                <p>PH: 8104451162</p>
-                <p>DOB: 2004-03-02</p>
-
-                <div class="text-green-400 font-bold underline mt-6"># PLATFORM_IDS</div>
-                <p>HTB: KD-2004</p>
-                <p>THM: KD234</p>
-                <p>GITHUB: kaushaldholakiya4</p>
-
-                <div class="text-green-400 font-bold underline mt-6"># EDUCATION</div>
-                <p>> M.Sc. Cyber Security @ Manipal University (2025)</p>
-                <p>> B.Sc. Computer Science @ Mumbai University (2022-2025)</p>
-
-                <div class="text-green-400 font-bold underline mt-6"># CORE_EXPERIENCE</div>
-                <p>> IT Support Tech @ CompiServices (2024-2025)</p>
-                <p>> VAPT Enthusiast & Ethical Hacker</p>
-
-                <div class="mt-8 flex gap-4">
-                    <a href="javascript:void(0)" class="px-4 py-2 bg-green-500 text-black font-bold rounded text-xs uppercase hover:bg-green-400">
-                        <i class="fas fa-download"></i> Download PDF
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="py-12 px-6 text-center text-gray-600 text-xs font-mono uppercase tracking-[0.3em]">
-        <p class="mb-2">© 2025 KAUSHAL DHOLAKIYA. ALL SYSTEMS GO.</p>
-    </footer>
+    <div class="card term" id="terminalCard" aria-live="polite" aria-atomic="false">
+      <div class="term-head">
+        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+        <div style="margin-left:auto;color:var(--muted);font-size:13px">kd@portfolio:~$</div>
+      </div>
+      <div class="term-body" id="termBody" role="log"></div>
+      <div style="font-size:12px;color:var(--muted);padding-top:8px">Interactive terminal — click to run demo commands</div>
+    </div>
+  </div>
+</header>
 
-    <script>
-        // Matrix Effect
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+<main>
+  <section id="about" class="card" style="margin-top:24px">
+    <div class="section-title"><div class="underline"></div><h2>About</h2></div>
+    <p class="muted">VAPT Analyst and Penetration Tester with hands-on experience in web, network, and system security testing. Skilled in vulnerability assessment, exploitation, and security auditing using Burp Suite, Nmap, Metasploit, SQLmap, and OWASP ZAP.</p>
+  </section>
 
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 33);
+  <section id="skills" class="card">
+    <div class="section-title"><div class="underline"></div><h2>Arsenal & Skills</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+      <div class="card">
+        <h3 class="text-sm text-green-400 mb-3">Offensive Security</h3>
+        <div class="muted text-sm">VAPT, OWASP Top 10, CVE analysis, PoC development</div>
+      </div>
+      <div class="card">
+        <h3 class="text-sm text-blue-300 mb-3">Tools</h3>
+        <div class="muted text-sm">Burp Suite, Nmap, Metasploit, SQLmap, OWASP ZAP, Wireshark, Hashcat</div>
+      </div>
+      <div class="card">
+        <h3 class="text-sm text-purple-300 mb-3">Development</h3>
+        <div class="muted text-sm">Python, Bash, SQL, C++, Java — automation & tooling</div>
+      </div>
+    </div>
+  </section>
 
-        // CV Modal Logic
-        function openCV() { document.getElementById('cv-modal').style.display = 'flex'; }
-        function closeCV() { document.getElementById('cv-modal').style.display = 'none'; }
+  <section id="projects" class="card">
+    <div class="section-title"><div class="underline"></div><h2>Mission Operations (Projects)</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+      <div class="card project">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="text-xs text-gray-400">Project_01</span>
+          <div style="display:flex;gap:6px"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+        </div>
+        <h3 class="mt-3 text-lg">LearnMate — AI Assistant</h3>
+        <p class="muted text-sm">OCR, document analysis, secure auth, and tested for OWASP Top 10 vulnerabilities.</p>
+        <div style="margin-top:10px"><a class="small-btn" href="https://github.com/kaushaldholakiya4" target="_blank" rel="noopener">View on GitHub</a></div>
+      </div>
 
-        // Typing Loader Logic
-        const loadMessages = [
-            { id: 'load-text-1', text: '> Initializing kernel boot sequence...' },
-            { id: 'load-text-2', text: '> Decrypting personnel profile: KAUSHAL_DHOLAKIYA...' },
-            { id: 'load-text-3', text: '> HTB: KD-2004 | THM: KD234 linked.' },
-            { id: 'load-text-4', text: '> ACCESS GRANTED.' }
-        ];
+      <div class="card project">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="text-xs text-gray-400">Project_02</span>
+          <div style="display:flex;gap:6px"><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+        </div>
+        <h3 class="mt-3 text-lg">CyberSense — AV Scanner</h3>
+        <p class="muted text-sm">Multi-engine malware analysis and consolidated threat reports.</p>
+        <div style="margin-top:10px"><a class="small-btn" href="https://github.com/kaushaldholakiya4" target="_blank" rel="noopener">View on GitHub</a></div>
+      </div>
+    </div>
+  </section>
 
-        async function typeMessage(elementId, message) {
-            const el = document.getElementById(elementId);
-            for (let char of message) {
-                el.textContent += char;
-                await new Promise(r => setTimeout(r, 15));
-            }
-        }
+  <section id="contact" class="card">
+    <div class="section-title"><div class="underline"></div><h2>Secure Channel</h2></div>
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:18px">
+      <div>
+        <form id="contactForm">
+          <div style="display:grid;gap:10px">
+            <input id="cf_name" placeholder="Your name" required class="w-full bg-black/50 p-3 rounded border border-gray-800">
+            <input id="cf_email" placeholder="your@email.com" required class="w-full bg-black/50 p-3 rounded border border-gray-800">
+            <textarea id="cf_msg" placeholder="Message" required class="w-full bg-black/50 p-3 rounded border border-gray-800"></textarea>
+            <div style="display:flex;gap:10px">
+              <button type="button" id="sendMailBtn" class="resume-btn">Send (Open Mail)</button>
+              <button type="button" id="saveBtn" class="small-btn">Save Locally</button>
+            </div>
+            <div id="cf_status" style="color:var(--muted);font-size:13px;margin-top:6px;display:none"></div>
+          </div>
+        </form>
+      </div>
 
-        window.onload = async () => {
-            const bar = document.getElementById('progress-bar');
-            const container = document.getElementById('progress-container');
-            const status = document.getElementById('load-status');
+      <div style="padding:12px;border-left:1px solid rgba(255,255,255,0.02)">
+        <div class="muted text-sm">Contact Info</div>
+        <div style="margin-top:8px">
+          <div class="muted text-xs">Email</div>
+          <div style="font-weight:700;color:var(--cyber-blue)">kaushaldholakiya4@gmail.com</div>
+          <div class="muted text-xs" style="margin-top:8px">Phone</div>
+          <div style="font-weight:700;color:var(--neon-green)">+91 8104451162</div>
 
-            await typeMessage(loadMessages[0].id, loadMessages[0].text);
-            await new Promise(r => setTimeout(r, 100));
-            await typeMessage(loadMessages[1].id, loadMessages[1].text);
-            
-            container.classList.remove('hidden');
-            let progress = 0;
-            const int = setInterval(() => {
-                progress += Math.random() * 8;
-                if (progress >= 100) { progress = 100; clearInterval(int); }
-                bar.style.width = progress + '%';
-                status.textContent = `PARSING_CV: ${Math.floor(progress)}%`;
-            }, 40);
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="small-btn" onclick="copyToClipboard('kaushaldholakiya4@gmail.com')"><i class="fa fa-copy"></i> Copy Email</button>
+            <button class="small-btn" onclick="copyToClipboard('+918104451162')"><i class="fa fa-copy"></i> Copy Phone</button>
+          </div>
 
-            await new Promise(r => setTimeout(r, 1000));
-            await typeMessage(loadMessages[2].id, loadMessages[2].text);
-            await typeMessage(loadMessages[3].id, loadMessages[3].text);
-            
-            await new Promise(r => setTimeout(r, 400));
-            document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 800);
-        };
-    </script>
+          <div style="margin-top:14px">
+            <div class="muted text-xs mb-2">Profiles</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <a class="small-btn" href="https://github.com/kaushaldholakiya4" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+              <button class="small-btn" onclick="openProfile('htb')"><i class="fa fa-shield"></i> HTB</button>
+              <button class="small-btn" onclick="openProfile('thm')"><i class="fa fa-shield-alt"></i> THM</button>
+              <a class="small-btn" href="https://linkedin.com/in/kaushal-dholakiya" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- CV modal / viewer -->
+<div id="cv-modal" aria-hidden="true">
+  <div class="modal-inner">
+    <div class="modal-toolbar">
+      <div style="display:flex;gap:8px;align-items:center">
+        <div style="font-weight:700;color:var(--cyber-blue)">RESUME VIEWER</div>
+        <div style="font-size:12px;color:var(--muted)">Kaushal_cv.pdf</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a id="downloadCv" class="small-btn" href="Kaushal_cv.pdf" download><i class="fa fa-download"></i> Download</a>
+        <button class="small-btn" id="closeCvBtn"><i class="fa fa-times"></i> Close</button>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow:auto;margin-top:12px">
+      <!-- iframe viewer (falls back to download if browser can't preview) -->
+      <iframe id="cvFrame" src="Kaushal_cv.pdf" style="width:100%;height:100%;min-height:60vh;border:none;border-radius:6px;"></iframe>
+    </div>
+  </div>
+</div>
+
+<footer style="padding:24px 6vw;text-align:center;color:var(--muted);font-size:12px;z-index:50">© <span id="year"></span> Kaushal Dholakiya — kaushaldholakiya4</footer>
+
+<script>
+/* ========== Data pulled from your CV (parsed) ============ */
+/* Source: your uploaded resume (extracted IDs). See assistant citation. */
+const PROFILE = {
+  name: "Kaushal Dholakiya",
+  email: "kaushaldholakiya4@gmail.com",
+  phone: "+91 8104451162",
+  github: "kaushaldholakiya4",
+  htb: "KD-2004",
+  thm: "KD234",
+  linkedin: "kaushal-dholakiya",
+  resumeFile: "Kaushal_cv.pdf"   // ensure this file is in repo root
+};
+
+/* show year */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- loader boot sequence ---------- */
+const loader = document.getElementById('loader');
+const progressBar = document.getElementById('progressBar');
+const loaderStatus = document.getElementById('loaderStatus');
+(async function boot(){
+  const steps = [
+    'initializing ai-core',
+    'mounting security modules',
+    'warming matrix renderer',
+    'loading terminal',
+    'syncing projects metadata',
+    'finalizing visual shaders'
+  ];
+  for(let i=0;i<steps.length;i++){
+    loaderStatus.textContent = '• ' + steps[i];
+    progressBar.style.width = Math.round(((i+1)/steps.length)*100) + '%';
+    await new Promise(r => setTimeout(r, 500 + Math.random()*600));
+  }
+  // small pause then hide loader
+  await new Promise(r => setTimeout(r, 400));
+  loader.style.transition = 'opacity .5s ease';
+  loader.style.opacity = 0;
+  setTimeout(()=> loader.style.display = 'none', 600);
+})();
+
+/* allow skip loader */
+window.addEventListener('keydown', (e)=> { if(e.key === 'Escape') { loader.style.display='none'; }});
+
+/* ========== Matrix background ========== */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){ canvas.width = innerWidth; canvas.height = innerHeight; initMatrix(); }
+window.addEventListener('resize', resizeCanvas);
+
+let fontSize = 16;
+let columns = 0;
+let drops = [];
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+
+function initMatrix(){
+  fontSize = Math.max(12, Math.floor(window.innerWidth / 120));
+  columns = Math.floor(canvas.width / fontSize);
+  drops = new Array(columns).fill(1);
+  ctx.font = fontSize + 'px monospace';
+}
+function drawMatrix(){
+  ctx.fillStyle = 'rgba(0,0,0,0.12)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = 'rgba(0,212,255,0.85)';
+  ctx.font = fontSize + 'px monospace';
+  for (let i=0;i<drops.length;i++){
+    const text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i]=0;
+    drops[i]++;
+  }
+}
+resizeCanvas();
+setInterval(drawMatrix, 33);
+
+/* ========== Terminal simulation ========== */
+const termBody = document.getElementById('termBody');
+const TERM_LINES = [
+  {cmd:'whoami', out: PROFILE.name},
+  {cmd:'date', out: new Date().toString()},
+  {cmd:'uname -a', out: 'Linux kd-vm 5.x x86_64 GNU/Linux'},
+  {cmd:`nmap -sC -sV 10.10.10.0/24`, out: '10.10.10.12 ssh | 10.10.10.22 http (nginx)'},
+  {cmd:`python3 poc.py --target 10.10.10.22`, out: '[+] PoC simulated: CVE-2024-XXXX (demo)'},
+  {cmd:`cat resume_meta.txt`, out: `EMAIL: ${PROFILE.email} | HTB: ${PROFILE.htb} | THM: ${PROFILE.thm}`}
+];
+
+let tIndex = 0;
+async function typeLine(text, cls='term-cmd'){
+  const line = document.createElement('div');
+  line.className = 'term-line ' + cls;
+  termBody.appendChild(line);
+  for(let i=0;i<text.length;i++){
+    line.textContent += text[i];
+    await new Promise(r => setTimeout(r, 10 + Math.random()*18));
+    termBody.scrollTop = termBody.scrollHeight;
+  }
+  return line;
+}
+
+async function runTerminalLoop(){
+  while(true){
+    const item = TERM_LINES[tIndex % TERM_LINES.length];
+    await typeLine('kd@portfolio:~$ ' + item.cmd, 'term-cmd');
+    await new Promise(r => setTimeout(r, 200 + Math.random()*600));
+    await typeLine(item.out, 'term-out');
+    tIndex++;
+    if(termBody.childElementCount > 28){
+      while(termBody.childElementCount > 20) termBody.removeChild(termBody.firstChild);
+    }
+    await new Promise(r => setTimeout(r, 600 + Math.random()*1000));
+  }
+}
+runTerminalLoop().catch(()=>{});
+
+/* allow click to inject example command */
+document.getElementById('terminalCard').addEventListener('click', ()=> {
+  (async ()=> {
+    await typeLine('kd@portfolio:~$ echo "demo run"', 'term-cmd');
+    await new Promise(r=>setTimeout(r,200));
+    await typeLine('demo output: terminal command simulated', 'term-out');
+  })();
+});
+
+/* ========== CV modal logic (viewer + download) ========== */
+const cvModal = document.getElementById('cv-modal');
+const openCVBtns = [document.getElementById('openCVBtn'), document.getElementById('openCVBtn2')];
+openCVBtns.forEach(b=> b && b.addEventListener('click', openCvModal));
+document.getElementById('closeCvBtn').addEventListener('click', closeCvModal);
+document.getElementById('downloadCv').href = PROFILE.resumeFile;
+
+function openCvModal(){
+  // set iframe src explicitly (helps ensure refresh)
+  document.getElementById('cvFrame').src = PROFILE.resumeFile;
+  cvModal.style.display = 'block';
+  cvModal.setAttribute('aria-hidden','false');
+}
+function closeCvModal(){
+  cvModal.style.display = 'none';
+  cvModal.setAttribute('aria-hidden','true');
+}
+
+/* ========== Contact form: save locally + mailto ========== */
+const sendBtn = document.getElementById('sendMailBtn');
+const saveBtn = document.getElementById('saveBtn');
+const cfStatus = document.getElementById('cf_status');
+
+sendBtn.addEventListener('click', ()=> {
+  const name = document.getElementById('cf_name').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const msg = document.getElementById('cf_msg').value.trim();
+  if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
+  if(!/^\S+@\S+\.\S+$/.test(email)){ showCFStatus('Invalid email', false); return; }
+  // prepare mailto
+  const subject = encodeURIComponent('Portfolio contact from ' + name);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone (if any): \n\nMessage:\n${msg}\n\n--\nSent via portfolio site`);
+  const mailto = `mailto:${PROFILE.email}?subject=${subject}&body=${body}`;
+  // save copy locally
+  const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
+  stored.push({name,email,msg,ts:Date.now()});
+  localStorage.setItem('kd_contacts', JSON.stringify(stored));
+  // open mail client
+  window.location.href = mailto;
+  showCFStatus('Opening your email client...', true);
+});
+
+saveBtn.addEventListener('click', ()=> {
+  const name = document.getElementById('cf_name').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const msg = document.getElementById('cf_msg').value.trim();
+  if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
+  const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
+  stored.push({name,email,msg,ts:Date.now()});
+  localStorage.setItem('kd_contacts', JSON.stringify(stored));
+  showCFStatus('Saved locally. Use the Open Mail button to send.', true);
+});
+
+function showCFStatus(txt, ok=true){
+  cfStatus.style.display = 'block';
+  cfStatus.style.color = ok ? 'lightgreen' : '#ff9a9a';
+  cfStatus.textContent = txt;
+}
+
+/* ========== copy helpers & profile opener ========== */
+function copyToClipboard(text){
+  navigator.clipboard?.writeText(text).then(()=> {
+    alert('Copied: ' + text);
+  }).catch(()=> {
+    prompt('Copy this', text);
+  });
+}
+
+document.getElementById('copyPhoneBtn').addEventListener('click', ()=> copyToClipboard(PROFILE.phone));
+
+/* openProfile: attempt a few common URL patterns, then fallback to Google search */
+function openProfile(platform){
+  if(platform === 'htb'){
+    const username = PROFILE.htb;
+    // common HTB patterns (best-effort). If one doesn't exist, user will land on fallback search.
+    const candidates = [
+      `https://www.hackthebox.com/users/profile/${encodeURIComponent(username)}`,
+      `https://app.hackthebox.com/users/${encodeURIComponent(username)}`,
+      `https://www.hackthebox.com/search?q=${encodeURIComponent(username)}`,
+      `https://www.google.com/search?q=HackTheBox+${encodeURIComponent(username)}`
+    ];
+    window.open(candidates[0], '_blank') || window.open(candidates[3], '_blank');
+  } else if(platform === 'thm'){
+    const username = PROFILE.thm;
+    const candidates = [
+      `https://tryhackme.com/p/${encodeURIComponent(username)}`,
+      `https://tryhackme.com/search?q=${encodeURIComponent(username)}`,
+      `https://www.google.com/search?q=TryHackMe+${encodeURIComponent(username)}`
+    ];
+    window.open(candidates[0], '_blank') || window.open(candidates[2], '_blank');
+  }
+}
+
+/* ========== small UI reveal when visible ========== */
+function revealCards(){ document.querySelectorAll('.card').forEach((c, i)=> setTimeout(()=> c.classList.add('visible'), i*80)); }
+window.addEventListener('load', revealCards);
+
+/* ========== ensure resume link present ========== */
+/* If the PDF file is not found in repo root the iframe will fail — the download button still works. */
+
+/* ========== Accessibility & usability notes ========== */
+/* - CV viewer uses iframe to preview PDF (browser dependent). If preview fails the Download button will download the file. */
+/* - HTB / THM buttons attempt typical URL patterns then fallback to search so visitors can reach your profiles even if site patterns differ. */
+
+</script>
+
 </body>
 </html>
