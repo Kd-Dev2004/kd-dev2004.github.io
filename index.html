@@ -1,161 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kaushal Dholakiya | Penetration Tester</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kaushal Dholakiya — Penetration Tester</title>
 
-  <!-- Tailwind + icons + font (same as yours) -->
+  <!-- Tailwind + Icons + Monospace font (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
   <style>
-    :root {
+    :root{
       --neon-green: #00ff41;
-      --dark-bg: #050505;
       --cyber-blue: #00f3ff;
-      --terminal-gray: #1a1a1a;
+      --muted: #93a8b8;
+      --bg: #03040a;
     }
-
-    /* Body / fonts */
-    body {
-      background-color: var(--dark-bg);
-      color: #e0e0e0;
-      font-family: 'Fira Code', monospace;
-      overflow-x: hidden;
-      margin: 0;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    /* Matrix Background */
-    #matrix-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      opacity: 0.16;
-      pointer-events: none;
-    }
-
-    /* Scanline Effect */
-    .scanlines {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                  linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.03));
-      background-size: 100% 4px, 3px 100%;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* Glitch Animation */
-    .glitch { position: relative; display: inline-block; }
-    .glitch::before, .glitch::after {
-      content: attr(data-text);
-      position: absolute; top:0; left:0; width:100%; height:100%; background: var(--dark-bg);
-      pointer-events:none;
-    }
-    .glitch::after {
-      left: 2px;
-      text-shadow: -2px 0 #ff00c1;
-      clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim 5s infinite linear alternate-reverse;
-    }
-    @keyframes glitch-anim {
-      0% { clip: rect(31px, 9999px, 94px, 0); }
-      20% { clip: rect(62px, 9999px, 42px, 0); }
-      100% { clip: rect(11px, 9999px, 86px, 0); }
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a0a; }
-    ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 10px; }
-
-    .terminal-box {
-      background: rgba(10, 10, 10, 0.85);
-      border: 1px solid var(--neon-green);
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.12);
-      backdrop-filter: blur(5px);
-    }
-
-    .skill-tag {
-      background: rgba(0, 243, 255, 0.06);
-      border: 1px solid var(--cyber-blue);
-      color: var(--cyber-blue);
-      transition: all 0.3s;
-    }
-    .skill-tag:hover {
-      background: var(--cyber-blue);
-      color: black;
-      box-shadow: 0 0 10px var(--cyber-blue);
-    }
-
-    .loader-screen {
-      position: fixed;
-      inset: 0;
-      background: black;
-      z-index: 200;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transition: opacity 0.6s ease-out;
-    }
-
-    @keyframes blink { 50% { opacity: 0; } }
-    .cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--neon-green); animation: blink 1s infinite; vertical-align: middle; }
-
-    .section-header { border-left: 4px solid var(--neon-green); padding-left: 1rem; margin-bottom: 1.25rem; }
-
-    .project-card { transition: transform 0.28s ease; cursor: pointer; }
-    .project-card:hover { transform: translateY(-6px); border-color: var(--cyber-blue); }
-
-    /* Progress Bar for Skills */
-    .meter { height: 10px; position: relative; background: #222; border-radius: 5px; overflow: hidden; }
-    .meter span { display: block; height: 100%; background-color: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
-
-    nav a { position: relative; }
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0; width: 0; height: 1px;
-      background: var(--neon-green);
-      transition: width 0.28s;
-    }
-    nav a:hover::after { width: 100%; }
-
-    /* Modal Styles */
-    #cv-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 220;
-      background: rgba(0,0,0,0.9);
-      padding: 2rem;
-      backdrop-filter: blur(8px);
-    }
-    .modal-content { max-width: 1100px; margin: auto; max-height: 90vh; overflow-y: auto; }
-
-    /* basic layout tweaks (kept your classes) */
-    .topbar{position:fixed;left:0;right:0;top:12px;display:flex;justify-content:space-between;align-items:center;padding:10px 28px;z-index:210;pointer-events:none}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#02030a 0%, #061028 100%);color:#dbeef0;font-family:"Fira Code",monospace; -webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    /* matrix */
+    #matrix-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.16}
+    .scanlines{position:fixed;inset:0;z-index:5;pointer-events:none;background:
+      linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%),
+      linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,255,0,0.01), rgba(0,0,255,0.02));
+      background-size:100% 4px,3px 100%}
+    /* top nav */
+    .topbar{position:fixed;left:0;right:0;top:12px;display:flex;justify-content:space-between;align-items:center;padding:10px 24px;z-index:120;pointer-events:none}
     .brand{pointer-events:auto;display:flex;align-items:center;gap:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
     .brand .logo{font-weight:800;color:var(--cyber-blue)}
     .navlinks{pointer-events:auto;display:flex;gap:10px;align-items:center}
-    .navlinks a{color:#93a8b8;text-decoration:none;padding:8px 12px;border-radius:8px}
-    .navlinks a:hover{color:var(--cyber-blue);background:rgba(255,255,255,0.02)}
+    .navlinks a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px}
+    .navlinks a:hover{background:rgba(255,255,255,0.02);color:var(--cyber-blue)}
     .resume-btn{background:linear-gradient(90deg,var(--cyber-blue),#7cffb2);color:#02111a;font-weight:700;border-radius:10px;padding:8px 12px;border:none;cursor:pointer}
-
-    /* hero / terminal minimal adjustments */
-    header.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:68px 6vw;position:relative;z-index:120}
+    /* hero/terminal layout */
+    header.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:68px 6vw;position:relative;z-index:60}
     .frame{max-width:1180px;width:100%;display:grid;grid-template-columns:1fr 480px;gap:26px;align-items:start}
-    .card{background:rgba(10,10,10,0.85);padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+    .card{background:rgba(10,10,10,0.86);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
     .hero-left h1{font-size:40px;margin:0;color:var(--cyber-blue)}
-    .muted{color:#93a8b8;line-height:1.6}
-
-    .term{font-family: 'Fira Code', monospace; font-size:13px;background:linear-gradient(180deg,#001018,#000814);color:#c4fbff;padding:14px;border-radius:10px;min-height:340px;display:flex;flex-direction:column}
+    .muted{color:var(--muted);line-height:1.6}
+    /* terminal */
+    .term{font-family:"Fira Code",monospace;font-size:13px;background:linear-gradient(180deg,#001018,#000814);color:#c4fbff;padding:14px;border-radius:10px;min-height:340px;display:flex;flex-direction:column}
     .term-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
     .dot{width:12px;height:12px;border-radius:50%}
     .dot.red{background:#ff6b6b} .dot.yellow{background:#ffd166} .dot.green{background:#7cffb2}
@@ -163,40 +48,34 @@
     .term-line{white-space:pre-wrap;line-height:1.45}
     .term-cmd{color:#9ff7ff}
     .term-out{color:var(--muted);font-family:Inter,system-ui,Arial}
-
-    footer{padding:24px 6vw;text-align:center;color:#93a8b8;font-size:12px;z-index:120}
-
+    /* modal */
+    #cv-modal{display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,0.9);padding:22px;backdrop-filter:blur(8px)}
+    .modal-inner{max-width:1100px;margin:auto;background:rgba(8,10,12,0.96);padding:12px;border-radius:10px;height:86vh;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.03)}
+    .modal-toolbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .small-btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted);cursor:pointer}
+    .small-btn:hover{background:rgba(255,255,255,0.02);color:var(--cyber-blue)}
+    /* contact */
+    input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:12px;border-radius:8px;color:inherit}
+    /* reveal */
+    .card{opacity:0;transform:translateY(8px);transition:all .6s cubic-bezier(.2,.9,.2,1)}
+    .card.visible{opacity:1;transform:none}
     /* responsive */
     @media (max-width:980px){
       .frame{grid-template-columns:1fr}
-      .topbar{top:8px;padding:6px 12px}
       .navlinks{display:none}
-      .navlinks.mobile-open{display:flex;position:fixed;left:12px;right:12px;top:60px;background:rgba(0,0,0,0.8);padding:12px;border-radius:8px;flex-direction:column;gap:8px;z-index:210}
+      .navlinks.mobile-open{display:flex;position:fixed;left:12px;right:12px;top:60px;background:rgba(0,0,0,0.9);padding:12px;border-radius:8px;flex-direction:column;gap:8px;z-index:210}
     }
-
-    /* reveal small */
-    .card{opacity:0;transform:translateY(8px);transition:all .6s cubic-bezier(.2,.9,.2,1)}
-    .card.visible{opacity:1;transform:none}
   </style>
 </head>
-<body class="antialiased">
+<body>
 
-  <!-- Loading Screen -->
-  <div id="loader" class="loader-screen" role="status" aria-live="polite">
-    <div class="loader-card">
-      <div>
-        <div class="glitch" id="glitchText" data-text="INITIALIZING KD-HACKER ENV">INITIALIZING KD-HACKER ENV</div>
-        <div style="margin-top:12px;color:#93a8b8;font-size:13px" id="loaderHint">Booting security modules...</div>
-        <div style="margin-top:16px" class="prog"><i id="progressBar" style="display:block;height:100%;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green));width:0%"></i></div>
-        <div style="margin-top:10px;color:#93a8b8;font-size:13px" id="loaderLog">• loading terminal • warming matrix</div>
-        <div style="margin-top:12px;color:#93a8b8;font-size:12px">Press <kbd style="padding:4px 6px;background:#000;border-radius:6px;color:var(--cyber-blue)">Esc</kbd> to skip</div>
-      </div>
-
-      <div style="font-family: 'Fira Code', monospace;color:#93a8b8;font-size:13px;padding:12px;background:rgba(255,255,255,0.02);border-radius:10px">
-        <div style="font-weight:700;color:var(--cyber-blue)">Status</div>
-        <div id="loaderStatus" style="margin-top:10px;color:#93a8b8">• init network monitors</div>
-        <div style="margin-top:12px;color:#93a8b8;font-size:12px">Resume loaded from repo root: <code style="color:var(--cyber-blue)">Kaushal_cv.pdf</code></div>
-      </div>
+  <!-- loader -->
+  <div id="loader" role="status" aria-live="polite" class="loader-screen" style="z-index:300">
+    <div style="max-width:880px;width:94%;padding:20px;border-radius:12px;background:rgba(0,0,0,0.9);border:1px solid rgba(255,255,255,0.03);text-align:left;color:var(--cyber-blue)">
+      <div style="font-weight:800;font-family:monospace;font-size:20px;margin-bottom:8px">INITIALIZING KD-HACKER ENV</div>
+      <div id="loaderStatus" style="color:var(--muted);font-size:13px;margin-bottom:8px">• booting</div>
+      <div style="height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-bottom:6px"><div id="loaderBar" style="height:100%;width:0;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green));"></div></div>
+      <div style="color:var(--muted);font-size:12px">Press <kbd style="padding:3px 6px;background:#000;border-radius:6px;color:var(--cyber-blue)">Esc</kbd> to skip</div>
     </div>
   </div>
 
@@ -204,217 +83,169 @@
   <canvas id="matrix-canvas" aria-hidden="true"></canvas>
   <div class="scanlines" aria-hidden="true"></div>
 
-  <!-- top nav -->
+  <!-- topbar -->
   <div class="topbar" role="navigation" aria-label="main">
     <div class="brand" title="Kaushal (KD)">
       <div class="logo">&lt;KD/&gt;</div>
-      <div style="font-size:13px;color:#93a8b8">kaushaldholakiya4.com</div>
+      <div style="font-size:13px;color:var(--muted)">kaushaldholakiya4.com</div>
     </div>
 
-    <div id="navLinks" class="navlinks" aria-hidden="false">
+    <nav id="navLinks" class="navlinks" aria-hidden="false">
       <a href="#about">Profile</a>
       <a href="#skills">Arsenal</a>
       <a href="#projects">Missions</a>
-      <a href="#experience">Logs</a>
       <a href="#contact">Connect</a>
-      <button id="openCVBtnTop" class="resume-btn">Resume</button>
-    </div>
+      <button id="openCvBtnTop" class="resume-btn">Resume</button>
+    </nav>
 
-    <div class="md:hidden" style="pointer-events:auto">
-      <i class="fas fa-bars text-xl" onclick="toggleMenu()"></i>
+    <div style="pointer-events:auto">
+      <button id="mobileMenuBtn" class="small-btn md:hidden" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
     </div>
   </div>
 
-  <!-- Hero Section -->
-  <header class="min-h-screen pt-32 pb-20 px-6 flex flex-col justify-center items-center text-center relative hero">
-    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-green-500/5 rounded-full blur-[120px]" aria-hidden="true"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-[120px]" aria-hidden="true"></div>
+  <!-- hero -->
+  <header class="hero">
+    <div class="frame" role="region" aria-label="Hero">
+      <div class="card hero-left" id="heroCard">
+        <h1>Kaushal Dholakiya</h1>
+        <p class="muted">Penetration Tester • VAPT Analyst • Cybersecurity & AI</p>
 
-    <div class="terminal-box p-1 mb-6 rounded-full inline-block">
-      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kaushal&backgroundColor=b6e3f4" alt="KD" class="w-32 h-32 rounded-full border-2 border-green-500">
-    </div>
+        <p class="muted" style="margin-top:12px">
+          I build secure systems, perform VAPT, and integrate AI & automation to speed up security analysis. Active on Hack The Box and TryHackMe.
+        </p>
 
-    <h1 class="text-5xl md:text-7xl font-bold mb-4 glitch" data-text="KAUSHAL DHOLAKIYA">KAUSHAL DHOLAKIYA</h1>
-    <p class="text-xl md:text-2xl text-green-500 mb-8 font-light tracking-widest uppercase">
-      Penetration Tester <span class="text-gray-600 px-2">|</span> VAPT Analyst
-    </p>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="small-btn" id="emailBtn" href="mailto:kaushaldholakiya4@gmail.com"><i class="fa fa-envelope"></i> Email</a>
+          <button class="small-btn" id="openCvBtnHero"><i class="fa fa-file-pdf"></i> View Resume</button>
+          <a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+          <button class="small-btn" id="copyPhoneBtn"><i class="fa fa-phone"></i> Copy Phone</button>
+        </div>
 
-    <div class="flex flex-wrap justify-center gap-4 mb-12">
-      <a href="mailto:kaushaldholakiya4@gmail.com" class="px-6 py-3 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-all rounded font-bold uppercase text-sm flex items-center gap-2">
-        <i class="fas fa-envelope"></i> Hire Me
-      </a>
-      <button onclick="openCvModal()" class="px-6 py-3 bg-white text-black hover:bg-gray-200 transition-all rounded font-bold uppercase text-sm flex items-center gap-2">
-        <i class="fas fa-file-pdf"></i> View / Download CV
-      </button>
-    </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="small-btn" id="htbBtn"><i class="fa fa-shield"></i> HTB: KD-2004</button>
+          <button class="small-btn" id="thmBtn"><i class="fa fa-shield-alt"></i> THM: KD234</button>
+          <a class="small-btn" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </div>
+      </div>
 
-    <div class="flex flex-wrap justify-center gap-6 text-2xl text-gray-500">
-      <a title="LinkedIn" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-linkedin"></i></a>
-      <a title="GitHub" href="https://github.com/KD-2004" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
-      <a title="HackTheBox: KD-2004" href="https://www.google.com/search?q=HackTheBox+KD-2004" target="_blank" class="hover:text-green-500 transition-colors font-bold text-lg border border-gray-800 px-2 rounded">HTB</a>
-      <a title="TryHackMe: KD234" href="https://tryhackme.com/p/KD234" target="_blank" class="hover:text-red-500 transition-colors font-bold text-lg border border-gray-800 px-2 rounded">THM</a>
-    </div>
-
-    <div class="mt-20 animate-bounce text-gray-600" aria-hidden="true">
-      <i class="fas fa-chevron-down"></i>
+      <div class="card term" aria-live="polite" aria-atomic="false">
+        <div class="term-head">
+          <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+          <div style="margin-left:auto;color:var(--muted);font-size:13px">kd@portfolio:~$</div>
+        </div>
+        <div class="term-body" id="termBody" role="log"></div>
+        <div style="font-size:12px;color:var(--muted);padding-top:8px">Interactive terminal — click to run a demo command</div>
+      </div>
     </div>
   </header>
 
-  <!-- MAIN layout: kept your sections, added ids for inputs -->
-  <main>
-    <!-- About -->
-    <section id="about" class="py-20 px-6 max-w-5xl mx-auto scroll-mt-20 card">
-      <div class="section-header">
-        <h2 class="text-3xl font-bold uppercase tracking-widest">_Profile_Summary</h2>
+  <!-- main sections -->
+  <main class="relative z-40">
+    <section id="about" class="card" style="margin:24px auto;max-width:1100px">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
+        <h2 style="margin:0;font-size:20px">_Profile_Summary</h2>
       </div>
-      <div class="terminal-box p-8 rounded-lg relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent" aria-hidden="true"></div>
-        <div class="flex flex-col md:flex-row justify-between mb-6 border-b border-gray-800 pb-4">
-          <div class="text-xs text-gray-500">
-            <p>USER: <span class="text-green-500">kaushaldholakiya4</span></p>
-            <p>HTB: <span class="text-green-500">KD-2004</span></p>
-            <p>THM: <span class="text-green-500">KD234</span></p>
+      <div class="terminal-box p-6 rounded-lg relative overflow-hidden">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+          <div style="color:var(--muted);font-size:13px">
+            <div>USER: <strong style="color:var(--neon-green)">kaushaldholakiya4</strong></div>
+            <div>HTB: <strong style="color:var(--neon-green)">KD-2004</strong></div>
+            <div>THM: <strong style="color:var(--neon-green)">KD234</strong></div>
           </div>
-          <div class="text-xs text-gray-500 text-right">
-            <p>UID: 2004-03-02</p>
-            <p>LOC: MUMBAI, MH</p>
+          <div style="color:var(--muted);font-size:13px;text-align:right">
+            <div>LOC: Mumbai, MH</div>
+            <div>UID: 2004-03-02</div>
           </div>
         </div>
-        <p class="text-lg leading-relaxed text-gray-300">
-          <span class="text-green-500">kaushal@kali:~$</span> cat profile.txt<br><br>
-          VAPT Analyst and Penetration Tester with hands-on experience in web, network, and system security testing. Skilled in vulnerability assessment, exploitation, and security auditing using industry tools like <span class="text-green-500">Burp Suite</span>, <span class="text-green-500">Nmap</span>, and <span class="text-green-500">Metasploit</span>.
-          <br><br>
-          Deep understanding of <span class="text-blue-400">OWASP Top 10</span>, CVE/CVSS scoring, and secure coding practices. Active practitioner on <span class="text-yellow-500">Hack The Box</span> and <span class="text-red-500">TryHackMe</span>. Currently pursuing M.Sc. in Cyber Security to further solidify defensive and offensive security strategies.
+
+        <p style="color:#d0e8ef;line-height:1.45">
+          <strong style="color:var(--neon-green)">kaushal@kali:~$</strong> cat profile.txt<br><br>
+          VAPT Analyst and Penetration Tester with hands-on experience in web, network, and system security testing. Skilled in vulnerability assessment, exploitation, and security auditing using Burp Suite, Nmap, Metasploit, SQLmap and OWASP ZAP.
         </p>
       </div>
     </section>
 
-    <!-- Skills -->
-    <section id="skills" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20 card">
-      <div class="section-header">
-        <h2 class="text-3xl font-bold uppercase tracking-widest">_Arsenal_&_Skills</h2>
+    <section id="skills" class="card" style="margin:24px auto;max-width:1100px">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
+        <h2 style="margin:0;font-size:20px">_Arsenal_&_Skills</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="terminal-box p-6 rounded-lg">
-          <h3 class="text-green-500 mb-6 flex items-center gap-2 font-bold"><i class="fas fa-user-secret"></i> Offensive Security</h3>
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between mb-1 text-xs uppercase">
-                <span>Web App Pentesting</span><span>90%</span>
-              </div>
-              <div class="meter"><span style="width: 90%"></span></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-1 text-xs uppercase">
-                <span>Network Exploitation</span><span>85%</span>
-              </div>
-              <div class="meter"><span style="width: 85%"></span></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-1 text-xs uppercase">
-                <span>Vulnerability Scanning</span><span>95%</span>
-              </div>
-              <div class="meter"><span style="width: 95%"></span></div>
-            </div>
-          </div>
+      <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <div class="card">
+          <h3 style="color:var(--neon-green);margin-bottom:8px">Offensive Security</h3>
+          <div style="color:var(--muted);font-size:14px">VAPT, OWASP Top 10, CVE analysis, PoC development</div>
         </div>
-
-        <div class="terminal-box p-6 rounded-lg lg:col-span-2">
-          <h3 class="text-blue-400 mb-6 flex items-center gap-2 font-bold"><i class="fas fa-tools"></i> Tools & Frameworks</h3>
-          <div class="flex flex-wrap gap-3">
-            <span class="skill-tag px-3 py-1 rounded text-sm">Burp Suite Professional</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Nmap</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Metasploit</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">SQLmap</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">OWASP ZAP</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Nikto</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Gobuster</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Aircrack-ng</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Hydra</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">Wireshark</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">John the Ripper</span>
-            <span class="skill-tag px-3 py-1 rounded text-sm">BloodHound</span>
-          </div>
+        <div class="card">
+          <h3 style="color:var(--cyber-blue);margin-bottom:8px">Tools & Frameworks</h3>
+          <div style="color:var(--muted);font-size:14px">Burp Suite, Nmap, Metasploit, SQLmap, OWASP ZAP, Wireshark, Hashcat</div>
         </div>
-
-        <div class="terminal-box p-6 rounded-lg lg:col-span-3">
-          <h3 class="text-purple-500 mb-6 flex items-center gap-2 font-bold"><i class="fas fa-laptop-code"></i> Engineering & Code</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="text-center p-4 border border-gray-800 rounded"><i class="fab fa-python text-3xl mb-2 text-yellow-500"></i><p class="text-xs">Python Scripting</p></div>
-            <div class="text-center p-4 border border-gray-800 rounded"><i class="fab fa-linux text-3xl mb-2 text-white"></i><p class="text-xs">Bash / Linux</p></div>
-            <div class="text-center p-4 border border-gray-800 rounded"><i class="fas fa-database text-3xl mb-2 text-blue-400"></i><p class="text-xs">SQL Injection / DB</p></div>
-            <div class="text-center p-4 border border-gray-800 rounded"><i class="fas fa-brain text-3xl mb-2 text-pink-500"></i><p class="text-xs">AI & ML</p></div>
-          </div>
+        <div class="card">
+          <h3 style="color:#d6a6ff;margin-bottom:8px">Engineering & Code</h3>
+          <div style="color:var(--muted);font-size:14px">Python, Bash, SQL, C++, Java — automation & tooling</div>
         </div>
       </div>
     </section>
 
-    <!-- Projects -->
-    <section id="projects" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20 card">
-      <div class="section-header"><h2 class="text-3xl font-bold uppercase tracking-widest">_Mission_Operations (Projects)</h2></div>
+    <section id="projects" class="card" style="margin:24px auto;max-width:1100px">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
+        <h2 style="margin:0;font-size:20px">_Mission_Operations</h2>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
-          <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
-            <span class="text-xs font-mono text-gray-500 italic">Project_01</span>
-            <div class="flex gap-2"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+      <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:monospace;color:var(--muted);font-size:12px">Project_01</span>
+            <div style="display:flex;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#ff6b6b;display:inline-block"></span><span style="width:9px;height:9px;border-radius:50%;background:#ffd166;display:inline-block"></span><span style="width:9px;height:9px;border-radius:50%;background:#7cffb2;display:inline-block"></span></div>
           </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">LearnMate - AI Assistant Platform</h3>
-            <p class="text-sm text-gray-400 mb-4">Web & Desktop application with secure authentication and robust input validation. Tested against OWASP Top 10 vulnerabilities like SQLi and XSS.</p>
-            <div style="margin-top:10px"><a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener">View on GitHub</a></div>
-          </div>
+          <h3 style="margin-top:8px">LearnMate — AI Assistant Platform</h3>
+          <p style="color:var(--muted);font-size:14px">OCR, document understanding, secure auth, and careful input validation. Tested against OWASP Top 10.</p>
+          <div style="margin-top:10px"><a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener">View on GitHub</a></div>
         </div>
 
-        <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
-          <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
-            <span class="text-xs font-mono text-gray-500 italic">Project_02</span>
-            <div class="flex gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:monospace;color:var(--muted);font-size:12px">Project_02</span>
+            <div style="display:flex;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#7cffb2;display:inline-block"></span></div>
           </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">CyberSense - AV Scanner</h3>
-            <p class="text-sm text-gray-400 mb-4">Multi-engine malware analysis system designed to assess file threats and identify malicious patterns.</p>
-            <div style="margin-top:10px"><a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener">View on GitHub</a></div>
-          </div>
+          <h3 style="margin-top:8px">CyberSense — AV Scanner</h3>
+          <p style="color:var(--muted);font-size:14px">Multi-engine malware analysis system for consolidated reporting.</p>
+          <div style="margin-top:10px"><a class="small-btn" href="https://github.com/KD-2004" target="_blank" rel="noopener">View on GitHub</a></div>
         </div>
       </div>
     </section>
 
-    <!-- Contact -->
-    <section id="contact" class="py-20 px-6 max-w-4xl mx-auto scroll-mt-20 card">
-      <div class="section-header"><h2 class="text-3xl font-bold uppercase tracking-widest">_Secure_Channel</h2></div>
+    <section id="contact" class="card" style="margin:24px auto 64px;max-width:900px">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div style="width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyber-blue),var(--neon-green))"></div>
+        <h2 style="margin:0;font-size:20px">_Secure_Channel</h2>
+      </div>
 
-      <div class="terminal-box p-8 rounded-lg">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div class="terminal-box p-6 rounded-lg">
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
           <div>
-            <p class="text-green-500 mb-4 tracking-tighter uppercase font-bold text-sm">// CONNECTION_INFO</p>
-            <div class="space-y-4">
-              <div class="flex items-center gap-4 text-gray-400"><i class="fas fa-map-marker-alt text-green-500"></i><span>Mumbai, Maharashtra</span></div>
-              <div class="flex items-center gap-4 text-gray-400"><i class="fas fa-phone-alt text-green-500"></i><span>+91 8104451162</span></div>
-              <div class="flex items-center gap-4 text-gray-400"><i class="fas fa-at text-green-500"></i><span>kaushaldholakiya4@gmail.com</span></div>
-            </div>
+            <div style="color:var(--muted);font-size:13px;margin-bottom:8px">// CONNECTION_INFO</div>
+            <div style="color:var(--muted)"><div><i class="fa fa-map-marker-alt text-green-400"></i> Mumbai, Maharashtra</div><div style="margin-top:6px"><i class="fa fa-phone-alt text-green-400"></i> +91 8104451162</div><div style="margin-top:6px"><i class="fa fa-at text-green-400"></i> kaushaldholakiya4@gmail.com</div></div>
           </div>
 
-          <div class="hidden md:block">
-            <div class="h-full border-l border-gray-800 pl-8 flex flex-col justify-center">
-              <p class="text-xs text-gray-500 italic mb-4">"Security is not a product, but a process."</p>
-              <p class="text-xs text-gray-400 font-mono tracking-widest">ENCRYPTION: AES-256-GCM</p>
-              <p class="text-xs text-gray-400 font-mono tracking-widest">STATUS: LISTENING...</p>
-            </div>
+          <div style="border-left:1px solid rgba(255,255,255,0.02);padding-left:12px">
+            <div style="color:var(--muted);font-size:12px;margin-bottom:8px">ENCRYPTION: AES-256-GCM</div>
+            <div style="color:var(--muted);font-size:12px">STATUS: LISTENING...</div>
           </div>
         </div>
 
-        <form id="contactForm" class="space-y-4" onsubmit="return false;">
-          <input id="cf_name" type="text" placeholder="YOUR_NAME" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors" required>
-          <input id="cf_email" type="email" placeholder="YOUR_EMAIL" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors" required>
-          <textarea id="cf_msg" rows="4" placeholder="TRANSMIT_MESSAGE" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors" required></textarea>
+        <form id="contactForm" style="margin-top:14px" onsubmit="return false;">
+          <input id="cf_name" type="text" placeholder="Your name" required style="width:100%;margin-bottom:8px" />
+          <input id="cf_email" type="email" placeholder="you@domain.com" required style="width:100%;margin-bottom:8px" />
+          <textarea id="cf_msg" rows="4" placeholder="Your message" required style="width:100%;margin-bottom:8px"></textarea>
 
-          <div style="display:flex;gap:10px">
-            <button id="sendMailBtn" type="button" class="w-full py-4 bg-green-500 text-black font-bold uppercase tracking-widest hover:bg-green-400 transition-colors rounded">Initiate Handshake (Open Mail)</button>
-            <button id="saveBtn" type="button" class="w-1/3 py-4 small-btn">Save Locally</button>
+          <div style="display:flex;gap:8px">
+            <button id="sendMailBtn" type="button" class="resume-btn" style="flex:1">Initiate Handshake (Open Mail)</button>
+            <button id="saveBtn" type="button" class="small-btn" style="width:140px">Save Locally</button>
           </div>
-          <div id="cf_status" style="color:var(--neon-green);font-size:13px;margin-top:6px;display:none"></div>
+          <div id="cf_status" style="color:var(--neon-green);font-size:13px;margin-top:8px;display:none"></div>
         </form>
       </div>
     </section>
@@ -422,9 +253,12 @@
 
   <!-- CV Modal -->
   <div id="cv-modal" aria-hidden="true">
-    <div class="modal-content modal-inner terminal-box p-4 rounded-lg">
-      <div class="modal-toolbar" style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;gap:8px;align-items:center"><div style="font-weight:700;color:var(--cyber-blue)">RESUME VIEWER</div><div style="font-size:12px;color:#93a8b8">Kaushal_cv.pdf</div></div>
+    <div class="modal-inner">
+      <div class="modal-toolbar">
+        <div>
+          <strong style="color:var(--cyber-blue)">RESUME VIEWER</strong>
+          <div style="font-size:12px;color:var(--muted)">Kaushal_cv.pdf</div>
+        </div>
         <div style="display:flex;gap:8px;align-items:center">
           <a id="downloadCv" class="small-btn" href="Kaushal_cv.pdf" download><i class="fa fa-download"></i> Download</a>
           <button id="closeCvBtn" class="small-btn"><i class="fa fa-times"></i> Close</button>
@@ -432,259 +266,210 @@
       </div>
 
       <div style="flex:1;overflow:auto;margin-top:12px">
+        <!-- Attempt iframe preview; on browsers that block inline PDF preview the download button still works -->
         <iframe id="cvFrame" src="Kaushal_cv.pdf" style="width:100%;height:78vh;border:none;border-radius:6px;"></iframe>
+        <noscript style="color:var(--muted)">PDF preview requires JavaScript-enabled browser — use the Download button above.</noscript>
       </div>
     </div>
   </div>
 
-  <footer><p>© <span id="year"></span> KAUSHAL DHOLAKIYA. ALL SYSTEMS GO.</p></footer>
+  <footer style="padding:28px;text-align:center;color:var(--muted);font-size:12px">© <span id="year"></span> KAUSHAL DHOLAKIYA — kaushaldholakiya4</footer>
 
+  <!-- SCRIPT (at bottom so DOM elements exist) -->
   <script>
-    /* ========== Profile data from CV (kept accurate) ========== */
-    const PROFILE = {
-      name: "Kaushal Dholakiya",
-      email: "kaushaldholakiya4@gmail.com",
-      phone: "+91 8104451162",
-      github: "KD-2004",
-      htb: "KD-2004",
-      thm: "KD234",
-      linkedin: "https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/",
-      resume: "Kaushal_cv.pdf"
-    };
+    (function(){
+      // PROFILE values from your CV
+      const PROFILE = {
+        email: 'kaushaldholakiya4@gmail.com',
+        phone: '+91 8104451162',
+        github: 'https://github.com/KD-2004',
+        linkedin: 'https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/',
+        htbSearch: 'https://www.google.com/search?q=HackTheBox+KD-2004',
+        thm: 'https://tryhackme.com/p/KD234',
+        resume: 'Kaushal_cv.pdf'
+      };
 
-    /* show year */
-    document.getElementById('year').textContent = new Date().getFullYear();
+      // SHOW YEAR
+      document.getElementById('year').textContent = new Date().getFullYear();
 
-    /* ========== Loader boot sequence (skip allowed) ========== */
-    const loader = document.getElementById('loader');
-    const progressBar = document.getElementById('progressBar');
-    const loaderLog = document.getElementById('loaderLog');
-    const loaderStatus = document.getElementById('loaderStatus');
-
-    (async function boot(){
-      const steps = [
-        'initializing ai-core',
-        'mounting security modules',
-        'warming matrix renderer',
-        'loading terminal',
-        'syncing projects metadata',
-        'finalizing visual shaders'
-      ];
-      for(let i=0;i<steps.length;i++){
-        loaderStatus.textContent = '• ' + steps[i];
-        const pct = Math.round(((i+1)/steps.length)*100);
-        progressBar.style.width = pct + '%';
-        loaderLog.textContent = '• ' + steps.slice(0,i+1).join(' • ');
-        await new Promise(r=>setTimeout(r, 500 + Math.random()*600));
-      }
-      await new Promise(r=>setTimeout(r, 300));
-      loader.style.transition = 'opacity .45s ease';
-      loader.style.opacity = 0;
-      setTimeout(()=> loader.style.display = 'none', 500);
-    })();
-
-    // skip loader with escape
-    window.addEventListener('keydown', e => { if(e.key === 'Escape'){ loader.style.display='none'; }});
-
-    /* ========== Matrix background (resizable) ========== */
-    const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let fontSize = 14;
-    let columns = 0;
-    let drops = [];
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
-
-    function resizeMatrix(){
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      fontSize = Math.max(12, Math.floor(window.innerWidth / 120));
-      columns = Math.floor(canvas.width / fontSize);
-      drops = new Array(columns).fill(1);
-      ctx.font = fontSize + 'px monospace';
-    }
-    window.addEventListener('resize', resizeMatrix);
-    resizeMatrix();
-
-    function drawMatrix(){
-      ctx.fillStyle = 'rgba(0,0,0,0.12)';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = 'rgba(0,212,255,0.85)';
-      ctx.font = fontSize + 'px monospace';
-      for(let i=0;i<drops.length;i++){
-        const text = letters[Math.floor(Math.random()*letters.length)];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-      }
-    }
-    setInterval(drawMatrix, 33);
-
-    /* ========== Terminal simulation (typewriter) ========== */
-    const termBody = document.getElementById('termBody');
-    const TERM_LINES = [
-      {cmd:'whoami', out: PROFILE.name},
-      {cmd:'date', out: new Date().toString()},
-      {cmd:'uname -a', out: 'Linux kd-vm 5.x x86_64 GNU/Linux'},
-      {cmd:`nmap -sC -sV 10.10.10.0/24`, out: '10.10.10.12 ssh | 10.10.10.22 http (nginx)'},
-      {cmd:`python3 poc.py --target 10.10.10.22`, out: '[+] PoC simulated: CVE-2024-XXXX (demo)'},
-      {cmd:`cat resume_meta.txt`, out: `EMAIL: ${PROFILE.email} | HTB: ${PROFILE.htb} | THM: ${PROFILE.thm}`}
-    ];
-
-    let tIndex = 0;
-    async function typeLine(text, cls='term-cmd'){
-      const line = document.createElement('div');
-      line.className = 'term-line ' + cls;
-      termBody.appendChild(line);
-      for(let i=0;i<text.length;i++){
-        line.textContent += text[i];
-        await new Promise(r => setTimeout(r, 10 + Math.random()*18));
-        termBody.scrollTop = termBody.scrollHeight;
-      }
-      return line;
-    }
-
-    async function runTerminalLoop(){
-      while(true){
-        const item = TERM_LINES[tIndex % TERM_LINES.length];
-        await typeLine('kd@portfolio:~$ ' + item.cmd, 'term-cmd');
-        await new Promise(r => setTimeout(r, 200 + Math.random()*600));
-        await typeLine(item.out, 'term-out');
-        tIndex++;
-        if(termBody.childElementCount > 28){
-          while(termBody.childElementCount > 20) termBody.removeChild(termBody.firstChild);
+      /* ---------- LOADER ---------- */
+      const loader = document.getElementById('loader');
+      const loaderBar = document.getElementById('loaderBar');
+      const loaderStatus = document.getElementById('loaderStatus');
+      (async function bootSequence(){
+        const steps = ['initializing ai-core','mounting security modules','warming matrix','loading terminal','syncing projects','finalizing visuals'];
+        for(let i=0;i<steps.length;i++){
+          loaderStatus.textContent = '• ' + steps[i];
+          loaderBar.style.width = Math.round(((i+1)/steps.length)*100) + '%';
+          await new Promise(r=>setTimeout(r, 420 + Math.random()*520));
         }
-        await new Promise(r => setTimeout(r, 600 + Math.random()*1200));
+        // hide
+        loader.style.transition = 'opacity .45s ease';
+        loader.style.opacity = 0;
+        setTimeout(()=> loader.style.display = 'none', 420);
+      })();
+      window.addEventListener('keydown', (e)=> { if(e.key === 'Escape') loader.style.display = 'none'; });
+
+      /* ---------- MATRIX ---------- */
+      const canvas = document.getElementById('matrix-canvas');
+      const ctx = canvas.getContext('2d');
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+      let fontSize, columns, drops;
+      function resizeMatrix(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        fontSize = Math.max(12, Math.floor(window.innerWidth/120));
+        columns = Math.floor(canvas.width / fontSize);
+        drops = new Array(columns).fill(1);
+        ctx.font = fontSize + 'px monospace';
       }
-    }
-    runTerminalLoop().catch(()=>{});
-
-    // click on terminal to inject demo command
-    document.querySelector('.term').addEventListener('click', async () => {
-      await typeLine('kd@portfolio:~$ echo "demo run"', 'term-cmd');
-      await new Promise(r=>setTimeout(r,200));
-      await typeLine('demo output: terminal command simulated', 'term-out');
-    });
-
-    /* ========== CV modal (open/close + download link) ========== */
-    const cvModal = document.getElementById('cv-modal');
-    document.getElementById('closeCvBtn').addEventListener('click', closeCvModal);
-    document.getElementById('downloadCv').href = PROFILE.resume;
-
-    // top open buttons
-    const openButtons = [document.getElementById('openCVBtnTop')];
-    openButtons.forEach(b => { if(b) b.addEventListener('click', openCvModal); });
-
-    function openCvModal(){
-      // set iframe src to ensure fresh load
-      const iframe = document.getElementById('cvFrame');
-      iframe.src = PROFILE.resume;
-      cvModal.style.display = 'block';
-      cvModal.setAttribute('aria-hidden','false');
-      // focus
-      iframe.focus();
-    }
-    function closeCvModal(){
-      cvModal.style.display = 'none';
-      cvModal.setAttribute('aria-hidden','true');
-      // clear iframe to release memory on some mobile browsers
-      // document.getElementById('cvFrame').src = '';
-    }
-
-    /* ========== Contact form: open mail client + save locally ========== */
-    const sendMailBtn = document.getElementById('sendMailBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    const cfStatus = document.getElementById('cf_status');
-
-    sendMailBtn.addEventListener('click', () => {
-      const name = document.getElementById('cf_name').value.trim();
-      const email = document.getElementById('cf_email').value.trim();
-      const msg = document.getElementById('cf_msg').value.trim();
-      if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
-      if(!/^\S+@\S+\.\S+$/.test(email)){ showCFStatus('Invalid email address', false); return; }
-      // save a local copy
-      const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
-      stored.push({name,email,msg,ts:Date.now()});
-      localStorage.setItem('kd_contacts', JSON.stringify(stored));
-      // prepare mailto
-      const subject = encodeURIComponent('Portfolio contact from ' + name);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}\n\n--\nSent via portfolio website`);
-      const mailto = `mailto:${PROFILE.email}?subject=${subject}&body=${body}`;
-      // open mail client (user will send)
-      window.location.href = mailto;
-      showCFStatus('Opening your email client...', true);
-    });
-
-    saveBtn.addEventListener('click', () => {
-      const name = document.getElementById('cf_name').value.trim();
-      const email = document.getElementById('cf_email').value.trim();
-      const msg = document.getElementById('cf_msg').value.trim();
-      if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
-      const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
-      stored.push({name,email,msg,ts:Date.now()});
-      localStorage.setItem('kd_contacts', JSON.stringify(stored));
-      showCFStatus('Saved locally. Use the Open Mail button to send.', true);
-    });
-
-    function showCFStatus(txt, ok=true){
-      cfStatus.style.display = 'block';
-      cfStatus.style.color = ok ? 'lightgreen' : '#ff9a9a';
-      cfStatus.textContent = txt;
-      setTimeout(()=>{ cfStatus.style.display = 'none'; }, 6000);
-    }
-
-    /* ========== Copy helpers & small actions ========== */
-    function copyToClipboard(text){
-      navigator.clipboard?.writeText(text).then(()=> {
-        alert('Copied: ' + text);
-      }).catch(()=> { prompt('Copy this', text); });
-    }
-
-    function toggleMenu(){
-      const nav = document.getElementById('navLinks');
-      if(nav.classList.contains('mobile-open')){
-        nav.classList.remove('mobile-open');
-      } else {
-        nav.classList.add('mobile-open');
+      window.addEventListener('resize', resizeMatrix);
+      resizeMatrix();
+      function drawMatrix(){
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = 'rgba(0,212,255,0.85)';
+        ctx.font = fontSize + 'px monospace';
+        for(let i=0;i<drops.length;i++){
+          const text = letters[Math.floor(Math.random()*letters.length)];
+          ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+          if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
       }
-    }
+      const matrixInterval = setInterval(drawMatrix, 33);
 
-    document.getElementById('openCVBtnTop').addEventListener('click', openCvModal);
-    document.getElementById('closeCvBtn').addEventListener('click', closeCvModal);
-
-    // copy phone quick action (top hero)
-    const copyPhoneBtn = document.querySelectorAll('[onclick="copyToClipboard(\'' + PROFILE.phone + '\')"]');
-    // fallback: if there's a copy phone button elsewhere, connect it
-    const copyPhoneTop = document.getElementById('copyPhoneBtn');
-    if(copyPhoneTop) copyPhoneTop.addEventListener('click', ()=> copyToClipboard(PROFILE.phone));
-
-    /* ========== HTB / THM open helpers ========== */
-    function openProfileHtb(username){
-      // best-effort HTB URL patterns
-      const candidates = [
-        `https://www.hackthebox.com/users/profile/${encodeURIComponent(username)}`,
-        `https://app.hackthebox.com/users/${encodeURIComponent(username)}`,
-        `https://www.google.com/search?q=HackTheBox+${encodeURIComponent(username)}`
+      /* ---------- TERMINAL ---------- */
+      const termBody = document.getElementById('termBody');
+      const TERM_LINES = [
+        {cmd:'whoami', out:'Kaushal'},
+        {cmd:'date', out: new Date().toString()},
+        {cmd:'uname -a', out:'Linux kd-vm 5.x x86_64 GNU/Linux'},
+        {cmd:'nmap -sC -sV 10.10.10.0/24', out:'10.10.10.12 ssh | 10.10.10.22 http (nginx)'},
+        {cmd:'python3 poc.py --target 10.10.10.22', out:'[+] PoC simulated: CVE-2024-XXXX (demo)'},
+        {cmd:'cat resume_meta.txt', out:`EMAIL: ${PROFILE.email} | HTB: KD-2004 | THM: KD234`}
       ];
-      window.open(candidates[0], '_blank') || window.open(candidates[2], '_blank');
-    }
-    function openProfileThm(username){
-      const candidates = [
-        `https://tryhackme.com/p/${encodeURIComponent(username)}`,
-        `https://tryhackme.com/search?q=${encodeURIComponent(username)}`,
-        `https://www.google.com/search?q=TryHackMe+${encodeURIComponent(username)}`
-      ];
-      window.open(candidates[0], '_blank') || window.open(candidates[2], '_blank');
-    }
 
-    // Attach HTB/THM click handlers for those hero buttons (they used inline onclick in original — replace gracefully)
-    document.querySelectorAll('a[title^="HackTheBox"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); openProfileHtb(PROFILE.htb); }));
-    document.querySelectorAll('a[title^="TryHackMe"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); openProfileThm(PROFILE.thm); }));
+      let tIndex=0;
+      async function typeLine(text, cls='term-cmd'){
+        const line = document.createElement('div');
+        line.className = 'term-line ' + cls;
+        termBody.appendChild(line);
+        for(let ch of text){
+          line.textContent += ch;
+          await new Promise(r=>setTimeout(r, 10 + Math.random()*18));
+          termBody.scrollTop = termBody.scrollHeight;
+        }
+      }
+      (async function terminalLoop(){
+        try{
+          while(true){
+            const item = TERM_LINES[tIndex % TERM_LINES.length];
+            await typeLine('kd@portfolio:~$ ' + item.cmd, 'term-cmd');
+            await new Promise(r=>setTimeout(r, 200 + Math.random()*600));
+            await typeLine(item.out, 'term-out');
+            tIndex++;
+            if(termBody.childElementCount > 28){
+              while(termBody.childElementCount > 20) termBody.removeChild(termBody.firstChild);
+            }
+            await new Promise(r=>setTimeout(r, 700 + Math.random()*1200));
+          }
+        }catch(e){ console.error(e) }
+      })();
 
-    /* ========== Simple reveal animation for cards ========== */
-    function revealCards(){ document.querySelectorAll('.card').forEach((c,i)=> setTimeout(()=> c.classList.add('visible'), i*70)); }
-    window.addEventListener('load', revealCards);
+      // Click terminal to inject demo
+      document.querySelectorAll('.term').forEach(el => {
+        el.addEventListener('click', async ()=>{
+          await typeLine('kd@portfolio:~$ echo "demo run"', 'term-cmd');
+          await new Promise(r=>setTimeout(r,200));
+          await typeLine('demo output: terminal command simulated', 'term-out');
+        });
+      });
 
+      /* ---------- CV modal ---------- */
+      const cvModal = document.getElementById('cv-modal');
+      const cvFrame = document.getElementById('cvFrame');
+      const openCvBtnTop = document.getElementById('openCvBtnTop');
+      const openCvBtnHero = document.getElementById('openCvBtnHero');
+      const closeCvBtn = document.getElementById('closeCvBtn');
+      const downloadCv = document.getElementById('downloadCv');
+
+      function openCvModal(){
+        try{ cvFrame.src = PROFILE.resume; }catch(e){}
+        cvModal.style.display = 'block';
+        cvModal.setAttribute('aria-hidden','false');
+      }
+      function closeCvModal(){
+        cvModal.style.display = 'none';
+        cvModal.setAttribute('aria-hidden','true');
+      }
+
+      if(openCvBtnTop) openCvBtnTop.addEventListener('click', openCvModal);
+      if(openCvBtnHero) openCvBtnHero.addEventListener('click', openCvModal);
+      if(closeCvBtn) closeCvBtn.addEventListener('click', closeCvModal);
+      if(downloadCv) downloadCv.setAttribute('href', PROFILE.resume);
+
+      /* ---------- CONTACT form ---------- */
+      const sendMailBtn = document.getElementById('sendMailBtn');
+      const saveBtn = document.getElementById('saveBtn');
+      const cfStatus = document.getElementById('cf_status');
+
+      function showCFStatus(txt, ok=true){
+        cfStatus.style.display = 'block';
+        cfStatus.style.color = ok ? '#9ff7ff' : '#ff9a9a';
+        cfStatus.textContent = txt;
+        setTimeout(()=> cfStatus.style.display = 'none', 6000);
+      }
+
+      sendMailBtn.addEventListener('click', ()=>{
+        const name = document.getElementById('cf_name').value.trim();
+        const email = document.getElementById('cf_email').value.trim();
+        const msg = document.getElementById('cf_msg').value.trim();
+        if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
+        if(!/^\S+@\S+\.\S+$/.test(email)){ showCFStatus('Invalid email address', false); return; }
+        const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
+        stored.push({name,email,msg,ts:Date.now()});
+        localStorage.setItem('kd_contacts', JSON.stringify(stored));
+        const subject = encodeURIComponent('Portfolio contact from ' + name);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}\n\n--\nSent via portfolio`);
+        window.location.href = `mailto:${PROFILE.email}?subject=${subject}&body=${body}`;
+        showCFStatus('Opening your default mail client...', true);
+      });
+
+      saveBtn.addEventListener('click', ()=>{
+        const name = document.getElementById('cf_name').value.trim();
+        const email = document.getElementById('cf_email').value.trim();
+        const msg = document.getElementById('cf_msg').value.trim();
+        if(!name || !email || !msg){ showCFStatus('Please fill all fields', false); return; }
+        const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
+        stored.push({name,email,msg,ts:Date.now()});
+        localStorage.setItem('kd_contacts', JSON.stringify(stored));
+        showCFStatus('Saved locally. Use mail button to send.', true);
+      });
+
+      /* ---------- Copy phone & small actions ---------- */
+      const copyPhoneBtn = document.getElementById('copyPhoneBtn');
+      if(copyPhoneBtn) copyPhoneBtn.addEventListener('click', ()=> {
+        navigator.clipboard?.writeText(PROFILE.phone).then(()=> alert('Phone copied: ' + PROFILE.phone)).catch(()=> prompt('Copy phone', PROFILE.phone));
+      });
+
+      // mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const navLinks = document.getElementById('navLinks');
+      mobileMenuBtn.addEventListener('click', ()=>{
+        navLinks.classList.toggle('mobile-open');
+      });
+
+      // HTB / THM open actions
+      const htbBtn = document.getElementById('htbBtn');
+      const thmBtn = document.getElementById('thmBtn');
+      if(htbBtn) htbBtn.addEventListener('click', () => window.open(PROFILE.htbSearch,'_blank'));
+      if(thmBtn) thmBtn.addEventListener('click', () => window.open(PROFILE.thm,'_blank'));
+
+      // reveal cards
+      window.addEventListener('load', ()=> document.querySelectorAll('.card').forEach((c,i)=> setTimeout(()=> c.classList.add('visible'), i*70)));
+    })();
   </script>
+
 </body>
 </html>
