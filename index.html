@@ -1,511 +1,630 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Kaushal Dholakiya — Cybersecurity Portfolio (KD)</title>
-<meta name="description" content="Kaushal Dholakiya — Penetration Tester | VAPT Analyst | Cybersecurity & AI" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='85' font-size='80' fill='%2300d4ff'>KD</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaushal Dholakiya | Penetration Tester</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #00ff41;
+            --dark-bg: #050505;
+            --cyber-blue: #00f3ff;
+            --terminal-gray: #1a1a1a;
+        }
 
-<style>
-  :root{
-    --bg:#020617;
-    --panel:#071827;
-    --muted:#93a8b8;
-    --accent:#00d4ff;
-    --accent2:#7cffb2;
-    --glass: rgba(255,255,255,0.03);
-    --radius:14px;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-  }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,#020617 0%, #061028 100%);color:#dceefc;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-  /* NAV */
-  .topbar{position:fixed;left:0;right:0;top:14px;display:flex;justify-content:space-between;align-items:center;padding:8px 26px;z-index:40;pointer-events:none}
-  .brand{pointer-events:auto;display:flex;align-items:center;gap:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-  .brand .logo{font-family:var(--mono);color:var(--accent);font-weight:800}
-  .navlinks{pointer-events:auto;display:flex;gap:8px;align-items:center}
-  .navlinks a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-size:14px}
-  .navlinks a:hover{background:var(--glass);color:var(--accent);}
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: hidden;
+            margin: 0;
+        }
 
-  /* main layout */
-  header.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:64px 6vw;position:relative;z-index:3}
-  .frame{max-width:1180px;width:100%;display:grid;grid-template-columns:1fr 460px;gap:28px;align-items:start}
-  .card{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:26px;border-radius:16px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.65)}
-  .hero-left h1{font-size:36px;margin:0;color:var(--accent)}
-  .muted{color:var(--muted);line-height:1.6}
-  .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);cursor:pointer;text-decoration:none;color:inherit;background:transparent}
-  .btn.primary{background:linear-gradient(90deg,var(--accent),#6fe2ff);color:#02111a;font-weight:700;border:none;box-shadow:0 10px 30px rgba(0,212,255,0.12)}
-  .pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-  .pill{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px}
+        /* Matrix Background */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.15;
+        }
 
-  /* terminal */
-  .terminal-wrap{display:flex;flex-direction:column;height:100%}
-  .term{font-family:var(--mono);font-size:13px;background:linear-gradient(180deg,#001017, #000814);color:#c4fbff;padding:14px;border-radius:12px;min-height:340px;display:flex;flex-direction:column}
-  .term-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-  .dot{width:12px;height:12px;border-radius:50%}
-  .dot.red{background:#ff6b6b} .dot.yellow{background:#ffd166} .dot.green{background:#7cffb2}
-  .term-body{flex:1;overflow:auto;padding:6px 4px}
-  .term-line{white-space:pre-wrap;line-height:1.45}
-  .term-cmd{color:#9ff7ff}
-  .term-out{color:var(--muted);font-family:Inter,system-ui,Arial}
+        /* Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
 
-  /* matrix / particles bg */
-  #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-  .neon-grid{position:fixed;inset:0;z-index:0;mix-blend-mode:screen;opacity:0.06;pointer-events:none}
+        /* Glitch Animation */
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark-bg);
+        }
+        .glitch::after {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            20% { clip: rect(62px, 9999px, 42px, 0); }
+            100% { clip: rect(11px, 9999px, 86px, 0); }
+        }
 
-  /* main sections */
-  main{position:relative;z-index:3}
-  section{padding:56px 6vw;max-width:1200px;margin:0 auto}
-  .section-title{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-  .underline{height:3px;width:56px;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 10px; }
 
-  .grid{display:grid;gap:18px}
-  .skills-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-  .project-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+        .terminal-box {
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            backdrop-filter: blur(5px);
+        }
 
-  /* contact */
-  form.contact{display:grid;gap:12px;grid-template-columns:1fr 1fr}
-  form.contact .full{grid-column:1/-1}
-  input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:12px;border-radius:10px;color:inherit}
-  textarea{min-height:120px;resize:vertical}
+        .skill-tag {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--cyber-blue);
+            color: var(--cyber-blue);
+            transition: all 0.3s;
+        }
+        .skill-tag:hover {
+            background: var(--cyber-blue);
+            color: black;
+            box-shadow: 0 0 10px var(--cyber-blue);
+        }
 
-  footer{padding:24px 6vw;text-align:center;color:var(--muted);font-size:13px;z-index:3}
+        .loader-screen {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out;
+        }
 
-  /* loading overlay (hacker theme) */
-  #loader{position:fixed;inset:0;background:linear-gradient(180deg,#000814, #001425);display:flex;align-items:center;justify-content:center;z-index:60;flex-direction:column;color:var(--accent)}
-  .loader-card{width:min(880px,94%);padding:28px;border-radius:16px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(8px);display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:center}
-  .glitch{font-family:var(--mono);font-size:28px;letter-spacing:1px;font-weight:800}
-  .progress{height:12px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-top:12px}
-  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;border-radius:999px;box-shadow:0 12px 40px rgba(0,212,255,0.12)}
-  .loader-right{font-family:var(--mono);color:var(--muted);font-size:13px;padding:12px;background:rgba(255,255,255,0.02);border-radius:10px}
-  .small-note{color:var(--muted);font-size:13px;margin-top:10px}
+        @keyframes blink { 50% { opacity: 0; } }
+        .cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--neon-green); animation: blink 1s infinite; vertical-align: middle; }
 
-  /* responsive */
-  @media (max-width:980px){
-    .frame{grid-template-columns:1fr}
-    .loader-card{grid-template-columns:1fr}
-    .topbar{top:8px;padding:6px 12px}
-  }
-</style>
+        .section-header {
+            border-left: 4px solid var(--neon-green);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-card {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyber-blue);
+        }
+
+        /* Progress Bar for Skills */
+        .meter {
+            height: 10px;
+            position: relative;
+            background: #222;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .meter span {
+            display: block;
+            height: 100%;
+            background-color: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a { position: relative; }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; width: 0; height: 1px;
+            background: var(--neon-green);
+            transition: width 0.3s;
+        }
+        nav a:hover::after { width: 100%; }
+
+    </style>
 </head>
-<body>
+<body class="antialiased">
 
-<!-- background canvas & neon grid -->
-<canvas id="bg-canvas" aria-hidden="true"></canvas>
-<svg class="neon-grid" width="100%" height="100%" preserveAspectRatio="none">
-  <defs>
-    <linearGradient id="g1" x1="0" x2="1">
-      <stop offset="0" stop-color="#00d4ff" stop-opacity="0.14" />
-      <stop offset="1" stop-color="#7cffb2" stop-opacity="0.08" />
-    </linearGradient>
-  </defs>
-  <rect x="0" y="0" width="100%" height="100%" fill="url(#g1)"></rect>
-</svg>
-
-<!-- top nav -->
-<div class="topbar" role="navigation" aria-label="Main nav">
-  <div class="brand" title="Kaushal (KD)">
-    <div class="logo">KD</div>
-    <div style="font-size:13px;color:var(--muted)">kaushaldholakiya4.com</div>
-  </div>
-
-  <div class="navlinks" aria-hidden="false">
-    <a href="#home">Home</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-    <a class="btn" href="Kaushal_cv.pdf" download style="background:rgba(255,255,255,0.02);border:1px solid rgba(0,212,255,0.12);color:var(--accent)">Download Resume</a>
-  </div>
-</div>
-
-<!-- loader overlay (Hacker theme intro) -->
-<div id="loader" role="status" aria-live="polite">
-  <div class="loader-card">
-    <div>
-      <div class="glitch" id="glitchText">INITIALIZING KD-HACKER ENV</div>
-      <div class="small-note">Boot sequence — loading security modules, AI cores, terminal...</div>
-      <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
-      <div class="small-note" id="loaderHint">Starting matrix...</div>
-    </div>
-    <div class="loader-right" id="loaderRight">
-      <div style="font-weight:700;color:var(--accent)">Status</div>
-      <div id="loaderLog" style="margin-top:10px;color:var(--muted);font-size:13px">
-        • init network monitors<br>
-        • load terminal module<br>
-        • warming matrix renderer
-      </div>
-      <div style="margin-top:14px;color:var(--muted);font-size:12px">Press <kbd style="background:#000;padding:4px 6px;border-radius:6px;color:var(--accent)">Esc</kbd> to skip animation</div>
-    </div>
-  </div>
-</div>
-
-<!-- main hero -->
-<header class="hero" role="banner">
-  <div class="frame">
-    <div class="card hero-left">
-      <h1>Kaushal Dholakiya</h1>
-      <p class="muted">Penetration Tester • VAPT Analyst • Cybersecurity & AI Developer</p>
-
-      <p class="muted" style="margin-top:12px">
-        I build secure systems, perform VAPT, and integrate AI to automate security analysis.
-        I practice on Hack The Box and TryHackMe and build projects combining AI with defensive tooling.
-      </p>
-
-      <div class="cta">
-        <a class="btn primary" href="#projects">View Projects</a>
-        <a class="btn" href="Kaushal_cv.pdf" download>Download Resume</a>
-        <a class="btn" href="#contact">Contact</a>
-      </div>
-
-      <div class="pills" style="margin-top:14px">
-        <span class="pill">VAPT</span><span class="pill">Web Security</span><span class="pill">AI</span><span class="pill">Automation</span>
-      </div>
-    </div>
-
-    <div class="terminal-wrap">
-      <div class="term card term" id="terminal" role="log" aria-live="polite" aria-atomic="false">
-        <div class="term-head">
-          <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-          <div style="margin-left:auto;color:var(--muted);font-size:13px">kd@portfolio:~$</div>
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-screen">
+        <div class="text-left w-full max-w-lg p-8 font-mono">
+            <p id="load-text-1" class="text-green-500 mb-1"></p>
+            <p id="load-text-2" class="text-green-500 mb-1"></p>
+            <p id="load-text-3" class="text-green-500 mb-1"></p>
+            <p id="load-text-4" class="text-blue-400 mb-4"></p>
+            <div id="progress-container" class="hidden w-full bg-gray-800 h-2 mt-4 rounded">
+                <div id="progress-bar" class="bg-green-500 h-full w-0 transition-all duration-300"></div>
+            </div>
+            <p id="load-status" class="text-xs mt-2 text-gray-500"></p>
         </div>
-        <div class="term-body" id="termBody"></div>
-        <div style="font-size:12px;color:var(--muted);padding-top:8px">Interactive terminal — simulated reconnaissance & demo outputs</div>
-      </div>
     </div>
-  </div>
-</header>
 
-<main>
-  <section id="about">
-    <div class="section-title"><div class="underline"></div><h2>About</h2></div>
-    <div class="card">
-      <p class="muted">I am a cybersecurity enthusiast focusing on vulnerability assessment, penetration testing, and security automation. I combine practical security testing with AI & automation to build tools that speed up discovery and analysis.</p>
-      <p class="muted" style="margin-top:8px">Location: India • Open to remote & contract roles</p>
-    </div>
-  </section>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="scanlines"></div>
 
-  <section id="skills">
-    <div class="section-title"><div class="underline"></div><h2>Skills</h2></div>
-    <div class="grid skills-grid">
-      <div class="card">
-        <h3>Security & Penetration Testing</h3>
-        <ul class="muted">
-          <li>VAPT, OWASP Top 10, Web App Testing</li>
-          <li>CVE analysis & PoC development</li>
-          <li>Security reporting & remediation guidance</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Tools & Platforms</h3>
-        <p class="muted">Burp Suite • Nmap • Metasploit • SQLmap • OWASP ZAP • Wireshark • Hashcat</p>
-      </div>
-      <div class="card">
-        <h3>Programming</h3>
-        <p class="muted">Python • Bash • SQL • C++ • Java — automation & tooling</p>
-      </div>
-      <div class="card">
-        <h3>Systems & AI</h3>
-        <p class="muted">Linux • Networking • YOLO • ML for security • Robotics & SLAM</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects">
-    <div class="section-title"><div class="underline"></div><h2>Projects</h2></div>
-    <div class="grid project-grid">
-      <article class="card"><h4>LearnMate — AI Assistant Platform</h4><p class="muted">Flask + local models, OCR, document understanding, RBAC and security-aware design.</p></article>
-      <article class="card"><h4>CyberSense — Multi-Engine Scanner</h4><p class="muted">Aggregates malware engine outputs for consolidated threat intelligence and analysis.</p></article>
-      <article class="card"><h4>MovieMate — Recommendation System</h4><p class="muted">LLM-based recommender with secure scraping & validation.</p></article>
-      <article class="card"><h4>InfiWasTex — Autonomous Robot</h4><p class="muted">YOLO detection, SLAM navigation, and robotic control experiments.</p></article>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="section-title"><div class="underline"></div><h2>Contact</h2></div>
-    <div class="card">
-      <form id="contactForm" class="contact" onsubmit="return false">
-        <label class="full"><div style="font-size:13px;color:var(--muted)">Full name</div><input id="c_name" required placeholder="Your name"></label>
-        <label class="full"><div style="font-size:13px;color:var(--muted)">Email</div><input id="c_email" type="email" required placeholder="you@domain.com"></label>
-        <label class="full"><div style="font-size:13px;color:var(--muted)">Message</div><textarea id="c_msg" required placeholder="Hi Kaushal — I have a role/project..."></textarea></label>
-        <div class="form-actions full" style="display:flex;gap:12px;align-items:center;justify-content:space-between">
-          <div class="muted">Prefer email? <a href="mailto:kaushal@example.com" style="color:var(--accent)">kaushal@example.com</a></div>
-          <div style="display:flex;gap:8px">
-            <button id="sendBtn" class="btn primary" type="button">Send</button>
-            <button id="clearBtn" class="btn" type="button">Clear</button>
-          </div>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-opacity-90 bg-black border-b border-gray-800 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="text-xl font-bold tracking-tighter text-green-500">
+                <span class="text-gray-400">&lt;</span>KD<span class="text-gray-400">/&gt;</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest">
+                <a href="#about" class="hover:text-green-500">Profile</a>
+                <a href="#skills" class="hover:text-green-500">Arsenal</a>
+                <a href="#projects" class="hover:text-green-500">Missions</a>
+                <a href="#experience" class="hover:text-green-500">Logs</a>
+                <a href="#contact" class="hover:text-green-500">Connect</a>
+            </div>
+            <div class="md:hidden">
+                <i class="fas fa-bars text-xl"></i>
+            </div>
         </div>
-      </form>
-      <div id="formStatus" style="margin-top:12px;color:var(--muted);display:none"></div>
-    </div>
-  </section>
-</main>
+    </nav>
 
-<footer>© <span id="year"></span> Kaushal Dholakiya — kaushaldholakiya4.com</footer>
+    <!-- Hero Section -->
+    <section class="min-h-screen pt-32 pb-20 px-6 flex flex-col justify-center items-center text-center relative">
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-green-500/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-[120px]"></div>
 
-<script>
-/* -------------------------
-   Inline modular system:
-   create runtime modules (terminal, matrix, ui) as blob URLs and import them lazily.
-   ------------------------- */
-function createModuleURL(code){
-  const blob = new Blob([code], { type: 'text/javascript' });
-  return URL.createObjectURL(blob);
-}
+        <div class="terminal-box p-1 mb-6 rounded-full inline-block">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kaushal&backgroundColor=b6e3f4" alt="KD" class="w-32 h-32 rounded-full border-2 border-green-500">
+        </div>
 
-/* Terminal module code (string) */
-const terminalCode = `
-// Terminal module: typewriter + fake recon + interactive commands
-export function initTerminal(container){
-  const lines = [
-    {cmd:'whoami', out:'kd'},
-    {cmd:'date', out: new Date().toString()},
-    {cmd:'uname -a', out:'Linux kd-vm 5.x x86_64 GNU/Linux'},
-    {cmd:'nmap -sC -sV 10.10.10.0/24', out:'10.10.10.12 ssh | 10.10.10.22 http (nginx)'},
-    {cmd:'python3 poc.py --target 10.10.10.22', out:'[+] PoC simulated: CVE-2024-XXXX (demo)'},
-    {cmd:'cat report.md', out:'Saved report: kd-vuln-report-2026.md'}
-  ];
-  let idx = 0;
-  const outEl = container;
-  outEl.innerHTML = '';
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 glitch" data-text="KAUSHAL DHOLAKIYA">KAUSHAL DHOLAKIYA</h1>
+        <p class="text-xl md:text-2xl text-green-500 mb-8 font-light tracking-widest uppercase">
+            Penetration Tester <span class="text-gray-600 px-2">|</span> VAPT Analyst
+        </p>
+        
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <a href="mailto:kaushaldholakiya4@gmail.com" class="px-6 py-3 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-all rounded font-bold uppercase text-sm flex items-center gap-2">
+                <i class="fas fa-envelope"></i> Hire Me
+            </a>
+            <a href="#" class="px-6 py-3 bg-white text-black hover:bg-gray-200 transition-all rounded font-bold uppercase text-sm flex items-center gap-2">
+                <i class="fas fa-download"></i> Download CV
+            </a>
+        </div>
 
-  function scrollToBottom(){ outEl.scrollTop = outEl.scrollHeight; }
+        <div class="flex gap-6 text-2xl text-gray-500">
+            <a href="https://linkedin.com/in/kaushal-dholakiya" class="hover:text-green-500 transition-colors"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/kaushaldholakiya4" class="hover:text-green-500 transition-colors"><i class="fab fa-github"></i></a>
+            <a href="#" class="hover:text-green-500 transition-colors"><i class="fas fa-code"></i></a>
+        </div>
 
-  async function typeText(text, cls='term-cmd'){
-    const line = document.createElement('div');
-    line.className = 'term-line ' + cls;
-    outEl.appendChild(line);
-    for(let i=0;i<text.length;i++){
-      line.textContent += text[i];
-      await new Promise(r => setTimeout(r, 12 + Math.random()*22));
-      scrollToBottom();
-    }
-    return line;
-  }
+        <div class="mt-20 animate-bounce text-gray-600">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
 
-  async function runOnce(){
-    const item = lines[idx % lines.length];
-    await typeText('kd@portfolio:~$ ' + item.cmd, 'term-cmd');
-    await new Promise(r => setTimeout(r, 180 + Math.random()*500));
-    await typeText(item.out, 'term-out');
-    idx++;
-    // occasionally show a "scan" animation
-    if(Math.random() > 0.7){
-      await typeText('Scanning ports...', 'term-cmd');
-      await new Promise(r => new Promise(res=>setTimeout(res, 400 + Math.random()*800)));
-      await typeText('Ports scanned: 64 (top services listed)', 'term-out');
-    }
-  }
+    <!-- About / Profile -->
+    <section id="about" class="py-20 px-6 max-w-5xl mx-auto scroll-mt-20">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold uppercase tracking-widest">_Profile_Summary</h2>
+        </div>
+        <div class="terminal-box p-8 rounded-lg relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent"></div>
+            <p class="text-lg leading-relaxed text-gray-300">
+                <span class="text-green-500">kaushal@kali:~$</span> cat profile.txt<br><br>
+                VAPT Analyst and Penetration Tester with hands-on experience in web, network, and system security testing. Skilled in vulnerability assessment, exploitation, and security auditing using industry tools like <span class="text-green-500">Burp Suite</span>, <span class="text-green-500">Nmap</span>, and <span class="text-green-500">Metasploit</span>. 
+                <br><br>
+                Deep understanding of <span class="text-blue-400">OWASP Top 10</span>, CVE/CVSS scoring, and secure coding practices. Active practitioner on <span class="text-yellow-500">Hack The Box</span> and <span class="text-red-500">TryHackMe</span>. Currently pursuing M.Sc. in Cyber Security to further solidify defensive and offensive security strategies.
+            </p>
+        </div>
+    </section>
 
-  let running = true;
-  async function loop(){
-    while(running){
-      await runOnce();
-      await new Promise(r => setTimeout(r, 700 + Math.random()*900));
-      // trim
-      if(outEl.childElementCount > 26){
-        while(outEl.childElementCount > 20) outEl.removeChild(outEl.firstChild);
-      }
-    }
-  }
-  loop().catch(e=>console.error(e));
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold uppercase tracking-widest">_Arsenal_&_Skills</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- PENTESTING -->
+            <div class="terminal-box p-6 rounded-lg">
+                <h3 class="text-green-500 mb-6 flex items-center gap-2 font-bold">
+                    <i class="fas fa-user-secret"></i> Offensive Security
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1 text-xs uppercase">
+                            <span>Web App Pentesting</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="meter"><span></span></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1 text-xs uppercase">
+                            <span>Network Exploitation</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="meter"><span style="width: 85%"></span></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1 text-xs uppercase">
+                            <span>Vulnerability Scanning</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="meter"><span style="width: 95%"></span></div>
+                    </div>
+                </div>
+            </div>
 
-  // expose simple command injection (demo only)
-  return {
-    runCommand: async function(cmd){
-      await typeText('kd@portfolio:~$ ' + cmd, 'term-cmd');
-      await new Promise(r=>setTimeout(r, 220 + Math.random()*320));
-      await typeText('[simulated output] ' + cmd.split(' ')[0] + ' executed', 'term-out');
-    },
-    stop: function(){ running = false; }
-  };
-}
-`;
+            <!-- TOOLS -->
+            <div class="terminal-box p-6 rounded-lg lg:col-span-2">
+                <h3 class="text-blue-400 mb-6 flex items-center gap-2 font-bold">
+                    <i class="fas fa-tools"></i> Tools & Frameworks
+                </h3>
+                <div class="flex flex-wrap gap-3">
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Burp Suite Professional</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Nmap</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Metasploit</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">SQLmap</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">OWASP ZAP</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Nikto</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Gobuster</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Aircrack-ng</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Hydra</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">Wireshark</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">John the Ripper</span>
+                    <span class="skill-tag px-3 py-1 rounded text-sm">BloodHound</span>
+                </div>
+            </div>
 
-/* Matrix / background module code */
-const matrixCode = `
-// Matrix module — simple matrix rain + particles
-export function startBG(canvas){
-  const ctx = canvas.getContext('2d');
-  let width = innerWidth, height = innerHeight;
-  let dpr = devicePixelRatio || 1;
-  let columns, fontSize = 16, drops;
+            <!-- DEVELOPMENT -->
+            <div class="terminal-box p-6 rounded-lg lg:col-span-3">
+                <h3 class="text-purple-500 mb-6 flex items-center gap-2 font-bold">
+                    <i class="fas fa-laptop-code"></i> Engineering & Code
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center p-4 border border-gray-800 rounded">
+                        <i class="fab fa-python text-3xl mb-2 text-yellow-500"></i>
+                        <p class="text-xs">Python Scripting</p>
+                    </div>
+                    <div class="text-center p-4 border border-gray-800 rounded">
+                        <i class="fab fa-linux text-3xl mb-2 text-white"></i>
+                        <p class="text-xs">Bash / Linux</p>
+                    </div>
+                    <div class="text-center p-4 border border-gray-800 rounded">
+                        <i class="fas fa-database text-3xl mb-2 text-blue-400"></i>
+                        <p class="text-xs">SQL Injection / DB</p>
+                    </div>
+                    <div class="text-center p-4 border border-gray-800 rounded">
+                        <i class="fas fa-brain text-3xl mb-2 text-pink-500"></i>
+                        <p class="text-xs">AI & Machine Learning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  function init(){
-    dpr = devicePixelRatio || 1;
-    canvas.width = innerWidth * dpr;
-    canvas.height = innerHeight * dpr;
-    canvas.style.width = innerWidth + 'px';
-    canvas.style.height = innerHeight + 'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    fontSize = Math.max(12, Math.min(18, Math.floor(innerWidth/120)));
-    columns = Math.floor(innerWidth / fontSize);
-    drops = new Array(columns).fill(1);
-    ctx.font = fontSize + 'px monospace';
-  }
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold uppercase tracking-widest">_Mission_Operations (Projects)</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Project 1 -->
+            <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
+                <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
+                    <span class="text-xs font-mono text-gray-500 italic">Project_01</span>
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">LearnMate - AI Assistant Platform</h3>
+                    <p class="text-sm text-gray-400 mb-4">Web & Desktop application with secure authentication and robust input validation. Tested against OWASP Top 10 vulnerabilities like SQLi and XSS.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-[10px] bg-black border border-green-900 px-2 py-1 text-green-500">PYTHON</span>
+                        <span class="text-[10px] bg-black border border-green-900 px-2 py-1 text-green-500">SQLITE</span>
+                        <span class="text-[10px] bg-black border border-green-900 px-2 py-1 text-green-500">VAPT</span>
+                    </div>
+                </div>
+            </div>
 
-  function draw(){
-    ctx.fillStyle = 'rgba(0,0,0,0.12)';
-    ctx.fillRect(0,0,canvas.width/dpr,canvas.height/dpr);
-    for(let i=0;i<drops.length;i++){
-      const x = i * fontSize;
-      const y = drops[i] * fontSize;
-      const char = String.fromCharCode(0x30A0 + Math.random()*96);
-      ctx.fillStyle = 'rgba(0,212,255,0.85)';
-      ctx.fillText(char, x, y);
-      ctx.fillStyle = 'rgba(124,255,178,0.12)';
-      ctx.fillText(char, x, y - fontSize*0.4);
-      drops[i]++;
-      if(drops[i]*fontSize > canvas.height/dpr && Math.random() > 0.975) drops[i]=0;
-    }
-    raf = requestAnimationFrame(draw);
-  }
+            <!-- Project 2 -->
+            <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
+                <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
+                    <span class="text-xs font-mono text-gray-500 italic">Project_02</span>
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">CyberSense - AV Scanner</h3>
+                    <p class="text-sm text-gray-400 mb-4">Multi-engine malware analysis system designed to assess file threats and identify malicious patterns using comparative detection analysis.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-[10px] bg-black border border-blue-900 px-2 py-1 text-blue-400">MALWARE_ANALYSIS</span>
+                        <span class="text-[10px] bg-black border border-blue-900 px-2 py-1 text-blue-400">PYTHON</span>
+                    </div>
+                </div>
+            </div>
 
-  let raf;
-  init();
-  raf = requestAnimationFrame(draw);
-  window.addEventListener('resize', ()=>{ cancelAnimationFrame(raf); init(); raf = requestAnimationFrame(draw); });
-  return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', ()=>{}); }
-}
-`;
+            <!-- Project 3 -->
+            <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
+                <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
+                    <span class="text-xs font-mono text-gray-500 italic">Project_03</span>
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">CreditGuard - Fraud Detection</h3>
+                    <p class="text-sm text-gray-400 mb-4">ML-powered system utilizing Logistic Regression and Random Forest to detect anomalous transaction patterns and financial security misuse.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-[10px] bg-black border border-purple-900 px-2 py-1 text-purple-400">ML</span>
+                        <span class="text-[10px] bg-black border border-purple-900 px-2 py-1 text-purple-400">SCIKIT-LEARN</span>
+                    </div>
+                </div>
+            </div>
 
-/* UI module code (forms, loader skippable, routing reveal) */
-const uiCode = `
-// UI wiring module: contact form, loader progress, SPA router & reveals
-export function wireUI({onLoaded}){
+            <!-- Project 4 -->
+            <div class="terminal-box p-0 rounded-lg overflow-hidden project-card group border border-gray-800">
+                <div class="bg-gray-900 p-4 border-b border-gray-800 flex justify-between items-center">
+                    <span class="text-xs font-mono text-gray-500 italic">Project_04</span>
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">Hands-On Practice</h3>
+                    <p class="text-sm text-gray-400 mb-4">Active labs on Hack The Box and TryHackMe focusing on Linux penetration testing, enumeration, and privilege escalation techniques.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-[10px] bg-black border border-red-900 px-2 py-1 text-red-500">HTB</span>
+                        <span class="text-[10px] bg-black border border-red-900 px-2 py-1 text-red-500">TRYHACKME</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  // year
-  document.getElementById('year').textContent = new Date().getFullYear();
+    <!-- Experience & Education -->
+    <section id="experience" class="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div>
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold uppercase tracking-widest">_Work_Logs</h2>
+                </div>
+                <div class="space-y-6">
+                    <div class="border-l-2 border-green-500 pl-6 relative">
+                        <div class="absolute w-3 h-3 bg-green-500 rounded-full -left-[7.5px] top-1 shadow-[0_0_10px_#00ff41]"></div>
+                        <h3 class="text-xl font-bold text-white">IT Support / Hardware & Software Engineer</h3>
+                        <p class="text-green-500 text-sm mb-2">CompiServices | 2024 - 2025</p>
+                        <ul class="text-sm text-gray-400 space-y-2 list-disc ml-4">
+                            <li>System troubleshooting and security hardening on Windows/Linux.</li>
+                            <li>Identified misconfigurations and access control issues during setup.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-  // SPA routing
-  function route(){
-    const hash = location.hash.replace('#','') || 'home';
-    document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
-    const target = document.getElementById(hash);
-    if(target) target.style.display = 'block';
-    // small scroll to top
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  window.addEventListener('hashchange', route);
-  route();
+            <div>
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold uppercase tracking-widest">_Education_Archive</h2>
+                </div>
+                <div class="space-y-8">
+                    <div class="terminal-box p-4 rounded">
+                        <h3 class="font-bold text-blue-400">M.Sc. in Cyber Security</h3>
+                        <p class="text-xs text-gray-500">Manipal University | 2025 - Present</p>
+                        <p class="text-sm mt-2 text-gray-300">Focused on Ethical Hacking, Forensics, and Network Defense.</p>
+                    </div>
+                    <div class="terminal-box p-4 rounded">
+                        <h3 class="font-bold text-blue-400">B.Sc. in Computer Science</h3>
+                        <p class="text-xs text-gray-500">Mumbai University | 2022 - 2025</p>
+                        <p class="text-sm mt-2 text-gray-300">Studied Core Programming, AI, and Cybersecurity Fundamentals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  // contact form
-  const sendBtn = document.getElementById('sendBtn');
-  const clearBtn = document.getElementById('clearBtn');
-  const status = document.getElementById('formStatus');
+        <div class="mt-16">
+            <div class="section-header">
+                <h2 class="text-2xl font-bold uppercase tracking-widest">_Certifications</h2>
+            </div>
+            <div class="flex flex-wrap gap-4">
+                <div class="px-4 py-2 border border-yellow-600/30 bg-yellow-600/5 text-yellow-500 rounded flex items-center gap-2">
+                    <i class="fas fa-certificate"></i> CEH (Certified Ethical Hacker)
+                </div>
+                <div class="px-4 py-2 border border-blue-600/30 bg-blue-600/5 text-blue-500 rounded flex items-center gap-2">
+                    <i class="fab fa-python"></i> Python Certified
+                </div>
+                <div class="px-4 py-2 border border-gray-600/30 bg-gray-600/5 text-gray-400 rounded flex items-center gap-2">
+                    <i class="fab fa-linux"></i> Linux Specialist
+                </div>
+                <div class="px-4 py-2 border border-orange-600/30 bg-orange-600/5 text-orange-500 rounded flex items-center gap-2">
+                    <i class="fab fa-android"></i> Android Development
+                </div>
+            </div>
+        </div>
+    </section>
 
-  function showStatus(txt, ok=true){
-    status.style.display = 'block';
-    status.textContent = txt;
-    status.style.color = ok ? '#9ff7ff' : '#ff9a9a';
-  }
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-6 max-w-4xl mx-auto scroll-mt-20">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold uppercase tracking-widest">_Secure_Channel</h2>
+        </div>
+        <div class="terminal-box p-8 rounded-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-green-500 mb-4 tracking-tighter uppercase font-bold text-sm">// CONNECTION_INFO</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 text-gray-400">
+                            <i class="fas fa-map-marker-alt text-green-500"></i>
+                            <span>Mumbai, Maharashtra</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-400">
+                            <i class="fas fa-phone-alt text-green-500"></i>
+                            <span>+91 8104451162</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-400">
+                            <i class="fas fa-at text-green-500"></i>
+                            <span>kaushaldholakiya4@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="h-full border-l border-gray-800 pl-8 flex flex-col justify-center">
+                        <p class="text-xs text-gray-500 italic mb-4">"Security is not a product, but a process."</p>
+                        <p class="text-xs text-gray-400 font-mono tracking-widest">ENCRYPTION: AES-256-GCM</p>
+                        <p class="text-xs text-gray-400 font-mono tracking-widest">STATUS: LISTENING...</p>
+                    </div>
+                </div>
+            </div>
 
-  sendBtn.addEventListener('click', async ()=>{
-    const name = document.getElementById('c_name').value.trim();
-    const email = document.getElementById('c_email').value.trim();
-    const msg = document.getElementById('c_msg').value.trim();
-    if(!name || !email || !msg){ showStatus('Please fill all fields', false); return; }
-    if(!/^\\S+@\\S+\\.\\S+$/.test(email)){ showStatus('Invalid email', false); return; }
-    sendBtn.textContent = 'Sending...'; sendBtn.disabled = true;
-    await new Promise(r=>setTimeout(r, 900 + Math.random()*800));
-    localStorage.setItem('kd_last_message', JSON.stringify({name,email,msg,ts:Date.now()}));
-    showStatus('Message saved locally. Click mailto to send: ', true);
-    const mailto = 'mailto:kaushal@example.com?subject=' + encodeURIComponent('Portfolio contact from '+name) + '&body=' + encodeURIComponent(msg + '\\n\\nEmail: ' + email);
-    const a = document.createElement('a'); a.href = mailto; a.textContent = 'Open email'; a.className='btn'; a.style.marginLeft='8px';
-    status.appendChild(a);
-    sendBtn.textContent = 'Send'; sendBtn.disabled = false;
-  });
+            <form class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="SUBJECT_NAME" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors">
+                    <input type="email" placeholder="CONTACT_EMAIL" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors">
+                </div>
+                <textarea rows="4" placeholder="TRANSMIT_MESSAGE" class="w-full bg-black border border-gray-800 p-3 rounded text-sm focus:border-green-500 outline-none transition-colors"></textarea>
+                <button type="button" class="w-full py-4 bg-green-500 text-black font-bold uppercase tracking-widest hover:bg-green-400 transition-colors rounded">
+                    Initiate Handshake <i class="fas fa-paper-plane ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </section>
 
-  clearBtn.addEventListener('click', ()=>{ document.getElementById('contactForm').reset(); status.style.display='none'; });
+    <!-- Footer -->
+    <footer class="py-12 px-6 text-center text-gray-600 text-xs font-mono uppercase tracking-[0.3em]">
+        <p class="mb-2">© 2025 KAUSHAL DHOLAKIYA. ALL SYSTEMS GO.</p>
+        <p>BUILT FOR SECURITY. DESIGNED FOR PERFORMANCE.</p>
+    </footer>
 
-  // reveal animations for cards
-  const cards = document.querySelectorAll('.card');
-  cards.forEach(c => { c.style.opacity=0; c.style.transform='translateY(10px)'; c.style.transition='all .6s cubic-bezier(.2,.9,.2,1)'; });
-  const obs = new IntersectionObserver(entries => {
-    for(const e of entries){
-      if(e.isIntersecting){ e.target.style.opacity=1; e.target.style.transform='translateY(0)'; }
-    }
-  }, {threshold:0.12});
-  cards.forEach(c=>obs.observe(c));
+    <script>
+        // Matrix Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
 
-  // loader controls
-  const loader = document.getElementById('loader');
-  const progressBar = document.getElementById('progressBar');
-  const loaderHint = document.getElementById('loaderHint');
-  const loaderLog = document.getElementById('loaderLog');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-  let skipped = false;
-  function skip(){ skipped = true; progressBar.style.width = '100%'; loader.style.opacity = 0; setTimeout(()=>loader.style.display='none',500); if(typeof onLoaded === 'function') onLoaded(); }
-  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') skip(); });
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
 
-  // animate progress and logs, then call onLoaded
-  (async function bootSequence(){
-    const steps = [
-      'initializing ai-core',
-      'mounting security modules',
-      'warming matrix renderer',
-      'loading terminal',
-      'syncing projects metadata',
-      'finalizing visual shaders'
-    ];
-    for(let i=0;i<steps.length && !skipped;i++){
-      loaderHint.textContent = steps[i];
-      loaderLog.innerHTML = '• ' + steps.slice(0,i+1).join('<br>• ');
-      progressBar.style.width = Math.round(((i+1)/steps.length)*100) + '%';
-      await new Promise(r=>setTimeout(r, 700 + Math.random()*700));
-    }
-    // final pause
-    await new Promise(r=>setTimeout(r, 450));
-    if(!skipped){
-      loader.style.transition='opacity .5s ease';
-      loader.style.opacity = 0;
-      setTimeout(()=>loader.style.display='none',500);
-      if(typeof onLoaded === 'function') onLoaded();
-    }
-  })();
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // expose manual skip for external use
-  return { skip };
-}
-`;
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
 
-/* create module URLs */
-const termURL = createModuleURL(terminalCode);
-const bgURL = createModuleURL(matrixCode);
-const uiURL = createModuleURL(uiCode);
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-/* initialize app: import modules and start */
-(async function init(){
-  try{
-    // lazy import modules in parallel
-    const [termMod, bgMod, uiMod] = await Promise.all([ import(termURL), import(bgURL), import(uiURL) ]);
-    // start background
-    const canvas = document.getElementById('bg-canvas');
-    const stopBG = bgMod.startBG(canvas);
-    // init terminal
-    const termContainer = document.getElementById('termBody');
-    const terminal = termMod.initTerminal(termContainer);
-    // wire UI, onLoaded callback will be called when loader finishes
-    uiMod.wireUI({ onLoaded: ()=> {
-      // keyboard focus trick: allow clicking terminal to run demo commands
-      document.getElementById('termBody').addEventListener('click', ()=> terminal.runCommand && terminal.runCommand('echo hello from kd'));
-    }});
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
 
-    // small: clicking the brand toggles a quick demo
-    document.querySelector('.brand').addEventListener('click', ()=> terminal.runCommand && terminal.runCommand('python3 demo_exploit.py --simulate'));
+        setInterval(drawMatrix, 33);
 
-    // cleanups on unload
-    window.addEventListener('unload', ()=>{ try{ stopBG(); terminal.stop && terminal.stop(); URL.revokeObjectURL(termURL); URL.revokeObjectURL(bgURL); URL.revokeObjectURL(uiURL);}catch(e){} });
-  }catch(err){
-    console.error('Init error', err);
-    // if loader stuck, hide it
-    document.getElementById('loader').style.display='none';
-  }
-})();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
-/* small helpers: allow skip loader by clicking progress */
-document.getElementById('progressBar').parentElement.addEventListener('click', ()=> { document.getElementById('loader').style.opacity=0; setTimeout(()=>document.getElementById('loader').style.display='none',500); });
+        // Typing Loader Logic
+        const loadMessages = [
+            { id: 'load-text-1', text: '> Initializing kernel boot sequence...' },
+            { id: 'load-text-2', text: '> Mapping network vulnerabilities...' },
+            { id: 'load-text-3', text: '> Decrypting personnel profile: KAUSHAL_DHOLAKIYA...' },
+            { id: 'load-text-4', text: '> ACCESS GRANTED.' }
+        ];
 
-</script>
+        async function typeMessage(elementId, message) {
+            const el = document.getElementById(elementId);
+            for (let char of message) {
+                el.textContent += char;
+                await new Promise(r => setTimeout(r, 20));
+            }
+        }
+
+        window.onload = async () => {
+            const bar = document.getElementById('progress-bar');
+            const container = document.getElementById('progress-container');
+            const status = document.getElementById('load-status');
+
+            await typeMessage(loadMessages[0].id, loadMessages[0].text);
+            await new Promise(r => setTimeout(r, 200));
+            await typeMessage(loadMessages[1].id, loadMessages[1].text);
+            
+            container.classList.remove('hidden');
+            let progress = 0;
+            const int = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(int);
+                }
+                bar.style.width = progress + '%';
+                status.textContent = `LOADING MODULES: ${Math.floor(progress)}%`;
+            }, 50);
+
+            await new Promise(r => setTimeout(r, 1200));
+            await typeMessage(loadMessages[2].id, loadMessages[2].text);
+            await new Promise(r => setTimeout(r, 300));
+            await typeMessage(loadMessages[3].id, loadMessages[3].text);
+            
+            await new Promise(r => setTimeout(r, 500));
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+            }, 800);
+        };
+
+        // Skill Meters Animation on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target.querySelector('span');
+                    if (bar && !bar.style.width) {
+                        const targetWidth = bar.parentElement.previousElementSibling.children[1].textContent;
+                        bar.style.width = targetWidth;
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.meter').forEach(m => observer.observe(m.parentElement));
+    </script>
 </body>
 </html>
