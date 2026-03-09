@@ -1,468 +1,717 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kaushal Dholakiya — Cybersecurity & AI Portfolio</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Kaushal Dholakiya | Cybersecurity Portfolio</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+<!-- Tailwind (quick styling) + Font Awesome + Fira Code -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <style>
-
-body{
-margin:0;
-font-family:"Fira Code",monospace;
-background:#02030a;
-color:#d0e8ef;
-overflow-x:hidden;
+:root{
+  --neon:#00ff41;
+  --cyan:#00f3ff;
+  --bg:#050505;
+  --muted:#93a8b8;
+  --panel:rgba(6,8,10,0.86);
 }
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#02030a 0%, #040618 100%);font-family:'Fira Code', monospace;color:#dbeef0;-webkit-font-smoothing:antialiased}
+a { color: inherit; }
+#matrix-canvas{position:fixed;inset:0;z-index:0;opacity:0.16;pointer-events:none}
+.scanlines{position:fixed;inset:0;z-index:10;pointer-events:none;background:
+ linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%),linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,255,0,0.01), rgba(0,0,255,0.02))}
+.topbar{position:fixed;left:0;right:0;top:12px;display:flex;justify-content:space-between;align-items:center;padding:8px 20px;z-index:60;pointer-events:none}
+.brand{pointer-events:auto;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.brand .logo{color:var(--cyan);font-weight:700}
+.navlinks{pointer-events:auto;display:flex;gap:10px;align-items:center}
+.navlinks a{color:var(--muted);padding:6px 10px;border-radius:8px;text-decoration:none}
+.navlinks a:hover{color:var(--cyan);background:rgba(255,255,255,0.02)}
+.resume-btn{background:linear-gradient(90deg,var(--cyan),#7cffb2);color:#02111a;font-weight:700;border-radius:8px;padding:8px 12px;border:none;cursor:pointer}
 
-canvas{
-position:fixed;
-top:0;
-left:0;
-z-index:-1;
-opacity:.15;
+/* loader */
+#loader{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:#000913}
+.loader-card{width:min(980px,94%);padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);display:flex;gap:14px;flex-wrap:wrap}
+
+/* hero */
+.hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:40;padding:84px 20px 40px}
+.avatar{width:120px;height:120px;border-radius:999px;border:2px solid var(--neon);overflow:hidden}
+.title{font-size:44px;color:var(--cyan);font-weight:800;letter-spacing:1px}
+.subtitle{color:var(--neon);font-weight:600;margin-top:8px}
+
+/* general panels */
+.panel{background:var(--panel);border:1px solid rgba(255,255,255,0.03);border-radius:12px;padding:18px}
+
+/* terminal */
+.terminal{background:linear-gradient(180deg,#000814,#001018);border:1px solid rgba(0,255,65,0.06);padding:12px;border-radius:8px;color:#9ff7ff;min-height:260px;overflow:auto}
+.term-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.term-dot{width:11px;height:11px;border-radius:999px}
+.term-dot.r{background:#ff6b6b}.term-dot.y{background:#ffd166}.term-dot.g{background:#7cffb2}
+
+/* tables & lists */
+.dt{color:var(--muted);font-size:13px;line-height:1.6}
+.section-title{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.underline{height:4px;width:64px;border-radius:12px;background:linear-gradient(90deg,var(--cyan),var(--neon))}
+
+/* project detail styles */
+.project-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.tag{padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:var(--muted);background:rgba(255,255,255,0.01);font-size:12px}
+
+/* progress */
+.meter{height:10px;background:#111;border-radius:8px;overflow:hidden}
+.meter > span{display:block;height:100%;box-shadow:0 0 10px var(--neon);background:var(--neon)}
+
+/* responsive */
+@media (max-width:980px){
+  .frame-grid{grid-template-columns:1fr !important}
+  .navlinks{display:none}
+  .navlinks.mobile-open{display:flex;position:fixed;left:12px;right:12px;top:64px;background:rgba(0,0,0,0.9);padding:12px;border-radius:8px;flex-direction:column;gap:8px;z-index:70}
 }
-
-/* NAV */
-
-nav{
-position:fixed;
-top:0;
-width:100%;
-background:#000;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-z-index:100;
-}
-
-nav a{
-color:#00f3ff;
-margin:0 10px;
-text-decoration:none;
-}
-
-nav a:hover{
-color:#00ff41;
-}
-
-/* HERO */
-
-.hero{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-}
-
-.hero h1{
-font-size:60px;
-color:#00f3ff;
-}
-
-.hero p{
-color:#9ff7ff;
-}
-
-/* BUTTONS */
-
-.btn{
-padding:10px 20px;
-border:1px solid #00f3ff;
-color:#00f3ff;
-margin:5px;
-text-decoration:none;
-}
-
-.btn:hover{
-background:#00f3ff;
-color:#000;
-}
-
-/* SECTIONS */
-
-section{
-max-width:1100px;
-margin:auto;
-padding:80px 20px;
-}
-
-h2{
-color:#00f3ff;
-margin-bottom:20px;
-}
-
-/* PROJECT CARDS */
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-}
-
-.card{
-background:#05070f;
-padding:20px;
-border:1px solid #111;
-}
-
-.card h3{
-color:#00ff41;
-}
-
-/* TERMINAL */
-
-.terminal{
-background:#000;
-padding:15px;
-height:300px;
-overflow:auto;
-border:1px solid #00f3ff;
-}
-
-.line{
-margin:4px 0;
-}
-
-/* CONTACT */
-
-input,textarea{
-width:100%;
-padding:10px;
-background:#000;
-border:1px solid #333;
-color:white;
-margin-bottom:10px;
-}
-
-/* MODAL */
-
-#cv-modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.9);
-}
-
-#cv-modal iframe{
-width:80%;
-height:90%;
-margin:5% auto;
-display:block;
-}
-
 </style>
 </head>
-
 <body>
 
-<canvas id="matrix"></canvas>
-
-<nav>
-
-<div>&lt;KD/&gt;</div>
-
-<div>
-
-<a href="#about">About</a>
-<a href="#skills">Skills</a>
-<a href="#projects">Projects</a>
-<a href="#details">Project Details</a>
-<a href="#contact">Contact</a>
-
+<!-- Loader (startup terminal style) -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="loader-card">
+    <div style="flex:1">
+      <div style="font-family:'Fira Code';font-weight:800;color:var(--cyan);font-size:18px">KD-PORTAL — BOOT SEQUENCE</div>
+      <div id="loaderLines" style="margin-top:10px;color:var(--neon);font-family:monospace;font-size:13px"></div>
+    </div>
+    <div style="width:320px">
+      <div style="font-size:12px;color:var(--muted)">STATUS</div>
+      <div id="loaderStatus" style="margin-top:8px;color:var(--muted);font-size:13px">initializing...</div>
+      <div style="height:8px;background:rgba(255,255,255,0.02);border-radius:999px;margin-top:10px;overflow:hidden">
+        <div id="loaderBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--neon))"></div>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">Press <kbd style="padding:4px;background:#000;border-radius:6px;color:var(--cyan)">Esc</kbd> to skip</div>
+    </div>
+  </div>
 </div>
 
-</nav>
+<!-- Matrix background & scanlines -->
+<canvas id="matrix-canvas" aria-hidden="true"></canvas>
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- Topbar -->
+<header class="topbar" role="banner">
+  <div class="brand" aria-hidden="false">
+    <div class="logo">&lt;KD/&gt;</div>
+    <div style="font-size:13px;color:var(--muted)">kaushaldholakiya4.com</div>
+  </div>
+
+  <nav id="navLinks" class="navlinks" aria-label="Main navigation">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#project-details">Project Details</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+    <button id="openCvTop" class="resume-btn">Resume</button>
+  </nav>
+
+  <div style="pointer-events:auto">
+    <button id="mobileToggle" class="text-muted small-btn" aria-label="Open menu"><i class="fa fa-bars"></i></button>
+  </div>
+</header>
 
 <!-- HERO -->
+<section class="hero" id="home" aria-label="Intro">
+  <div class="panel" style="display:flex;gap:18px;align-items:center;flex-direction:column;max-width:980px;">
+    <img class="avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kaushal&backgroundColor=b6e3f4" alt="Kaushal avatar">
+    <div class="title">KAUSHAL DHOLAKIYA</div>
+    <div class="subtitle">Penetration Tester • VAPT Analyst • AI & Systems Engineer</div>
 
-<div class="hero">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <a class="resume-btn" href="mailto:kaushaldholakiya4@gmail.com"><i class="fa fa-envelope mr-2"></i>Hire / Contact</a>
+      <button class="resume-btn" id="openCvHero"><i class="fa fa-file-pdf mr-2"></i>View / Download CV</button>
+      <a class="btn" href="https://github.com/KD-2004" target="_blank" style="background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)"><i class="fa fa-github mr-2"></i>GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank" style="background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)"><i class="fa fa-linkedin mr-2"></i>LinkedIn</a>
+    </div>
 
-<h1>Kaushal Dholakiya</h1>
-
-<p>Penetration Tester | Cybersecurity | AI Systems</p>
-
-<div>
-
-<a class="btn" href="mailto:kaushaldholakiya4@gmail.com">Email</a>
-
-<a class="btn" onclick="openCV()">Resume</a>
-
-<a class="btn" href="https://github.com/KD-2004" target="_blank">GitHub</a>
-
-<a class="btn" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank">LinkedIn</a>
-
-</div>
-
-</div>
-
-<!-- ABOUT -->
-
-<section id="about">
-
-<h2>Profile Summary</h2>
-
-<p>
-
-I am a cybersecurity enthusiast focused on vulnerability assessment,
-penetration testing, and security research.
-
-My work involves understanding system internals, identifying weaknesses,
-and building tools to improve security defenses.
-
-Alongside cybersecurity I build advanced systems involving
-artificial intelligence, automation, and robotics.
-
-My projects explore AI assistants, malware analysis systems,
-machine learning fraud detection, and autonomous robotics.
-
-My long-term goal is to become a security researcher capable
-of building intelligent cybersecurity tools.
-
-</p>
-
+    <div style="margin-top:14px;color:var(--muted);font-size:13px;letter-spacing:0.6px">HTB: <strong style="color:var(--neon)">KD-2004</strong> &nbsp; | &nbsp; THM: <strong style="color:var(--neon)">KD234</strong></div>
+  </div>
 </section>
 
-<!-- TERMINAL -->
+<!-- MAIN CONTENT -->
+<main class="relative z-30">
 
-<section>
+  <!-- ABOUT -->
+  <section id="about" class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Profile Summary</h2></div>
+    <div class="dt">
+      <p>
+        I'm a cybersecurity researcher and systems engineer focusing on penetration testing (VAPT), vulnerability research, and building secure AI-driven systems.
+        I combine offensive security skills (web app & network pentesting, exploit development) with systems engineering and AI/ML to build tools that help defenders and auditors.
+      </p>
 
-<h2>Security Console</h2>
+      <p style="margin-top:8px">
+        My interests: offensive security, automated vulnerability discovery, adversarial ML, AI-assisted security tooling, robotics autonomy, and applied ML for anomaly detection.
+        I actively practice on HTB and TryHackMe and build projects that bridge AI + security.
+      </p>
+    </div>
+  </section>
 
-<div class="terminal" id="terminal"></div>
+  <!-- SKILLS & TOOLS -->
+  <section id="skills" class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Arsenal & Skills</h2></div>
 
-</section>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="panel">
+        <h3 class="text-sm" style="color:var(--neon)">Offensive Security</h3>
+        <ul class="dt mt-3">
+          <li>Web App Pentesting (Burp Suite, OWASP Top 10)</li>
+          <li>Network Exploitation & scanning (Nmap, Wireshark)</li>
+          <li>Exploit validation & PoC development</li>
+        </ul>
+        <div class="mt-4">
+          <div class="dt text-xs">Web App Pentesting</div>
+          <div class="meter mt-1"><span style="width:90%"></span></div>
+        </div>
+      </div>
 
-<!-- SKILLS -->
+      <div class="panel">
+        <h3 class="text-sm" style="color:var(--cyan)">AI & Engineering</h3>
+        <ul class="dt mt-3">
+          <li>Local LLM pipelines, prompt engineering (DeepSeek/Phi-3)</li>
+          <li>ML models for fraud detection, anomaly detection</li>
+          <li>Automation & scripting (Python, Bash)</li>
+        </ul>
+        <div class="mt-4">
+          <div class="dt text-xs">AI & ML</div>
+          <div class="meter mt-1"><span style="width:75%"></span></div>
+        </div>
+      </div>
 
-<section id="skills">
+      <div class="panel">
+        <h3 class="text-sm" style="color:#d6a6ff">Tools & Frameworks</h3>
+        <div class="project-meta mt-3">
+          <div class="tag">Burp Suite</div><div class="tag">Nmap</div><div class="tag">Metasploit</div>
+          <div class="tag">SQLmap</div><div class="tag">YOLO / CV</div><div class="tag">Flask</div>
+        </div>
+        <div class="mt-4">
+          <div class="dt text-xs">Tooling</div>
+          <div class="meter mt-1"><span style="width:88%"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<h2>Skills</h2>
+  <!-- Projects summary -->
+  <section id="projects" class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Project Missions — Overview</h2></div>
 
-<ul>
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- LearnMate -->
+      <article class="panel">
+        <h3 style="color:var(--neon)">LearnMate — AI Assistant Platform</h3>
+        <p class="dt mt-2">AI assistant for document understanding, OCR, and automation. Full-stack: Flask backend, local LLM integration, OCR pipelines, and secure auth. <strong>Role:</strong> Architect, lead dev.</p>
+        <div class="project-meta mt-3">
+          <a class="tag" href="#learnmate-details">Details</a>
+          <a class="tag" href="https://github.com/KD-2004" target="_blank">Repo</a>
+        </div>
+      </article>
 
-<li>Vulnerability Assessment & Penetration Testing</li>
-<li>OWASP Top 10 Security Testing</li>
-<li>Web Application Security</li>
-<li>Network Security</li>
-<li>Malware Analysis Concepts</li>
-<li>AI Application Development</li>
-<li>Machine Learning Systems</li>
-<li>Python Automation</li>
+      <!-- CyberSense -->
+      <article class="panel">
+        <h3 style="color:var(--neon)">CyberSense — Multi-Engine AV Scanner</h3>
+        <p class="dt mt-2">Aggregates results from multiple antivirus engines to generate consolidated threat reports and heuristics. <strong>Role:</strong> Lead research & implementation.</p>
+        <div class="project-meta mt-3">
+          <a class="tag" href="#cybersense-details">Details</a>
+          <a class="tag" href="https://github.com/KD-2004" target="_blank">Repo</a>
+        </div>
+      </article>
 
-</ul>
+      <!-- MovieMate -->
+      <article class="panel">
+        <h3 style="color:var(--neon)">MovieMate — AI Movie Recommendation</h3>
+        <p class="dt mt-2">Hybrid recommender using language models + collaborative filtering and live scraping for metadata. <strong>Role:</strong> ML pipeline & deployment.</p>
+        <div class="project-meta mt-3">
+          <a class="tag" href="#moviemate-details">Details</a>
+          <a class="tag" href="https://github.com/KD-2004" target="_blank">Repo</a>
+        </div>
+      </article>
 
-</section>
+      <!-- CreditGuard -->
+      <article class="panel">
+        <h3 style="color:var(--neon)">CreditGuard — Fraud Detection</h3>
+        <p class="dt mt-2">Transaction anomaly detection using feature engineering and ensemble models. <strong>Role:</strong> Data engineering & model selection.</p>
+        <div class="project-meta mt-3">
+          <a class="tag" href="#creditguard-details">Details</a>
+          <a class="tag" href="https://github.com/KD-2004" target="_blank">Repo</a>
+        </div>
+      </article>
 
-<!-- PROJECTS -->
+      <!-- InfiWasTex -->
+      <article class="panel">
+        <h3 style="color:var(--neon)">InfiWasTex — Autonomous Waste Robot</h3>
+        <p class="dt mt-2">Robotics integration of SLAM, YOLO-based perception, and arm control for waste collection. <strong>Role:</strong> Systems integration & perception.</p>
+        <div class="project-meta mt-3">
+          <a class="tag" href="#infiwastex-details">Details</a>
+          <a class="tag" href="https://github.com/KD-2004" target="_blank">Repo</a>
+        </div>
+      </article>
+    </div>
 
-<section id="projects">
+    <div style="margin-top:16px" class="dt">Want a dedicated page for each project? Scroll down to Project Details.</div>
+  </section>
 
-<h2>Projects</h2>
+  <!-- Project details all sections -->
+  <section id="project-details" class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Project Details</h2></div>
 
-<div class="grid">
+    <!-- LearnMate -->
+    <article id="learnmate-details" class="panel mb-6">
+      <h3 style="color:var(--neon)">LearnMate — AI Assistant Platform</h3>
+      <p class="dt mt-3">Abstract: LearnMate is a full-stack assistant focused on document Q&A, OCR-based ingestion, and workflow automation. Built to run locally with privacy and offline-first models.</p>
 
-<div class="card">
-<h3>LearnMate AI Assistant</h3>
-<p>AI assistant platform with OCR, document analysis and secure authentication.</p>
+      <h4 class="mt-4">Objectives</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Provide interactive document Q&A with semantic search and citations</li>
+        <li>Support PDF, images, and slides ingestion via OCR</li>
+        <li>Secure multi-user authentication & role management</li>
+      </ul>
+
+      <h4 class="mt-4">Architecture & Tech Stack</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Backend: Flask (REST + WebSocket)</li>
+        <li>LLM: Ollama / local Phi-3 Mini for reasoning</li>
+        <li>OCR & Vision: Tesseract / TrOCR / Donut routing</li>
+        <li>Storage: SQLite + embeddings via FAISS/Chroma</li>
+        <li>Frontend: Vanilla JS + Tailwind / Terminal themed UI</li>
+      </ul>
+
+      <h4 class="mt-4">Key Contributions</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Designed prompt chaining for multi-step reasoning</li>
+        <li>Built PDF ingestion + OCR pipeline and structured outputs</li>
+        <li>Implemented secure auth and rate-limited endpoints</li>
+        <li>Stress-tested for injection and file parsing attacks</li>
+      </ul>
+
+      <div class="project-meta mt-4">
+        <a class="tag" href="https://github.com/KD-2004" target="_blank"><i class="fa fa-github mr-1"></i>Code (public)</a>
+        <span class="tag">Stack: Flask · Ollama · Tesseract · FAISS</span>
+      </div>
+    </article>
+
+    <!-- CyberSense -->
+    <article id="cybersense-details" class="panel mb-6">
+      <h3 style="color:var(--neon)">CyberSense — Multi-Engine Antivirus Scanner</h3>
+      <p class="dt mt-3">Abstract: CyberSense aggregates detections from multiple AV engines and heuristics to produce an explainable threat report and confidence scores.</p>
+
+      <h4 class="mt-4">Objectives</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Automate scanning using multiple AV engines</li>
+        <li>Normalize findings and present consolidated report</li>
+        <li>Provide scoring & remediation suggestions</li>
+      </ul>
+
+      <h4 class="mt-4">Architecture & Tech Stack</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Orchestration: Python workers + Celery</li>
+        <li>Analysis: YARA signatures, static hashing, sandboxing stubs</li>
+        <li>Reporting: HTML & JSON reports with CVE/CWEs mapping</li>
+      </ul>
+
+      <h4 class="mt-4">Key Contributions</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Designed detection normalization layers</li>
+        <li>Implemented consensus scoring and false-positive suppression</li>
+        <li>Built UI for browsing reports and timelines</li>
+      </ul>
+
+      <div class="project-meta mt-4">
+        <a class="tag" href="https://github.com/KD-2004" target="_blank"><i class="fa fa-github mr-1"></i>Code</a>
+        <span class="tag">Stack: Python · Celery · Redis · YARA</span>
+      </div>
+    </article>
+
+    <!-- MovieMate -->
+    <article id="moviemate-details" class="panel mb-6">
+      <h3 style="color:var(--neon)">MovieMate — AI Movie Recommendation</h3>
+      <p class="dt mt-3">Abstract: MovieMate combines LLM embeddings with collaborative signals to provide personalized recommendations and explanations.</p>
+
+      <h4 class="mt-4">Tech & Features</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Embedding-based similarity with precomputed vectors</li>
+        <li>Genre & user-preference fusion</li>
+        <li>Explainable recommendations using LLMs</li>
+      </ul>
+
+      <div class="project-meta mt-4">
+        <a class="tag" href="https://github.com/KD-2004" target="_blank"><i class="fa fa-github mr-1"></i>Code</a>
+        <span class="tag">Stack: Python · Embeddings · Scrapers</span>
+      </div>
+    </article>
+
+    <!-- CreditGuard -->
+    <article id="creditguard-details" class="panel mb-6">
+      <h3 style="color:var(--neon)">CreditGuard — Fraud Detection System</h3>
+      <p class="dt mt-3">Abstract: CreditGuard models transaction streams for fraud risk using supervised and unsupervised approaches.</p>
+
+      <h4 class="mt-4">Highlights</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Feature engineering for time-series transactions</li>
+        <li>Models: Logistic Regression, Random Forests, Isolation Forest</li>
+        <li>Evaluation: Precision/Recall, ROC-AUC, and confusion analysis</li>
+      </ul>
+
+      <div class="project-meta mt-4">
+        <a class="tag" href="https://github.com/KD-2004" target="_blank"><i class="fa fa-github mr-1"></i>Code</a>
+        <span class="tag">Stack: Pandas · Scikit-learn · Matplotlib</span>
+      </div>
+    </article>
+
+    <!-- InfiWasTex -->
+    <article id="infiwastex-details" class="panel mb-6">
+      <h3 style="color:var(--neon)">InfiWasTex — Autonomous Waste Detection Robot</h3>
+      <p class="dt mt-3">Abstract: InfiWasTex is a robotics project combining cameras, YOLO detection, and SLAM navigation to autonomously detect and collect waste.</p>
+
+      <h4 class="mt-4">Key Systems</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>Perception: YOLOv8 / custom datasets</li>
+        <li>Navigation: LiDAR + Visual SLAM (RTAB-Map / ORB-SLAM variants)</li>
+        <li>Control: ROS2 stack and embedded microcontroller for gripper control</li>
+      </ul>
+
+      <h4 class="mt-4">Contributions</h4>
+      <ul class="dt ml-4 list-disc">
+        <li>End-to-end pipeline for detection → localization → pickup</li>
+        <li>Model training and dataset curation</li>
+        <li>Deployment on edge hardware (Jetson / Raspberry / NVidia)</li>
+      </ul>
+
+      <div class="project-meta mt-4">
+        <a class="tag" href="https://github.com/KD-2004" target="_blank"><i class="fa fa-github mr-1"></i>Code</a>
+        <span class="tag">Stack: ROS2 · YOLO · Jetson</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- Education & Experience -->
+  <section id="education" class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Education & Experience</h2></div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="panel">
+        <h3 style="color:var(--cyan)">Education</h3>
+        <div class="dt mt-3">
+          <strong>M.Sc. Cyber Security — Manipal University (2025)</strong>
+          <div>Focus: Offensive security, forensics, secure system design</div>
+          <div style="margin-top:8px"><strong>B.Sc. Computer Science — Mumbai University (2022-2025)</strong></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 style="color:var(--cyan)">Experience</h3>
+        <div class="dt mt-3">
+          <strong>IT Support Tech — CompiServices (2024-2025)</strong>
+          <div>Responsibilities: System administration, support, automation</div>
+          <div style="margin-top:8px"><strong>VAPT & Research (personal & freelance)</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications & Research Interests -->
+  <section class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="panel">
+        <h3 style="color:var(--neon)">Certifications</h3>
+        <ul class="dt mt-3">
+          <li>Certified Ethical Hacker (CEH)</li>
+          <li>Python Programming</li>
+          <li>Linux Fundamentals</li>
+          <li>Android Development</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h3 style="color:var(--neon)">Research Interests</h3>
+        <ul class="dt mt-3">
+          <li>AI-driven security automation</li>
+          <li>Vulnerability discovery with ML</li>
+          <li>Adversarial ML and defenses</li>
+          <li>Autonomous robotic perception & control</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GitHub repo tiles (public) -->
+  <section id="repos" class="max-w-6xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Recent GitHub Projects (public)</h2></div>
+    <div id="repoGrid" class="grid md:grid-cols-3 gap-6">
+      <!-- Repos loaded by JS -->
+      <div class="dt">Loading repos...</div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="max-w-4xl mx-auto px-6 py-12 panel">
+    <div class="section-title"><div class="underline"></div><h2 class="ml-2">Secure Channel</h2></div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <div class="dt">Email: <strong style="color:var(--neon)">kaushaldholakiya4@gmail.com</strong></div>
+        <div class="dt mt-2">Phone: <strong style="color:var(--neon)">+91 8104451162</strong></div>
+        <div class="mt-4">
+          <button id="copyEmail" class="tag">Copy Email</button>
+          <button id="copyPhone" class="tag">Copy Phone</button>
+          <a class="tag" href="https://tryhackme.com/p/KD234" target="_blank">TryHackMe: KD234</a>
+          <a class="tag" href="https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+
+      <div>
+        <form id="contactForm" onsubmit="return false;">
+          <input id="cf_name" type="text" placeholder="Your name" class="w-full panel p-3 mb-2 bg-transparent" required/>
+          <input id="cf_email" type="email" placeholder="Your email" class="w-full panel p-3 mb-2 bg-transparent" required/>
+          <textarea id="cf_msg" placeholder="Message" rows="5" class="w-full panel p-3 mb-2 bg-transparent" required></textarea>
+          <div class="flex gap-2">
+            <button id="sendBtn" class="resume-btn">Open Mail Client</button>
+            <button id="saveBtn" class="small-btn panel">Save Locally</button>
+            <button id="downloadCvBtn" class="small-btn panel"><i class="fa fa-download"></i> Download CV</button>
+          </div>
+          <div id="cf_status" class="dt mt-2" style="display:none"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 text-center dt">
+    © <span id="year"></span> KAUSHAL DHOLAKIYA — <a href="https://github.com/KD-2004" target="_blank">KD-2004</a>
+  </footer>
+</main>
+
+<!-- CV modal -->
+<div id="cv-modal" style="display:none;position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.92);padding:28px">
+  <div style="max-width:1100px;margin:auto;background:var(--panel);border-radius:10px;padding:12px;height:86vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div><strong style="color:var(--cyan)">RESUME VIEWER</strong> <div class="dt">Kaushal_cv.pdf</div></div>
+      <div style="display:flex;gap:8px">
+        <a id="downloadCv" href="Kaushal_cv.pdf" download class="tag">Download</a>
+        <button id="closeCv" class="tag">Close</button>
+      </div>
+    </div>
+    <iframe id="cvFrame" src="Kaushal_cv.pdf" style="width:100%;height:78vh;border:none;border-radius:8px"></iframe>
+  </div>
 </div>
 
-<div class="card">
-<h3>CyberSense Antivirus Scanner</h3>
-<p>Multi engine malware scanning tool.</p>
-</div>
+<!-- Accessibility helper -->
+<a id="skip" href="#about" class="sr-only">Skip to content</a>
 
-<div class="card">
-<h3>MovieMate Recommendation AI</h3>
-<p>AI movie recommendation system using language models.</p>
-</div>
-
-<div class="card">
-<h3>CreditGuard Fraud Detection</h3>
-<p>Machine learning system detecting fraudulent transactions.</p>
-</div>
-
-<div class="card">
-<h3>InfiWasTex Waste Robot</h3>
-<p>Autonomous robot detecting and collecting waste.</p>
-</div>
-
-</div>
-
-</section>
-
-<!-- PROJECT DETAILS -->
-
-<section id="details">
-
-<h2>Project Details</h2>
-
-<h3>LearnMate</h3>
-<p>
-Flask based AI assistant with document understanding,
-OCR extraction, and secure authentication.
-</p>
-
-<h3>CyberSense</h3>
-<p>
-Malware analysis tool comparing multiple antivirus engines
-to improve detection accuracy.
-</p>
-
-<h3>MovieMate</h3>
-<p>
-AI recommendation system using machine learning
-and web scraping for dynamic movie data.
-</p>
-
-<h3>CreditGuard</h3>
-<p>
-Fraud detection using machine learning models
-including Logistic Regression and Random Forest.
-</p>
-
-<h3>InfiWasTex</h3>
-<p>
-Robotics project combining YOLO object detection,
-SLAM navigation and robotic manipulation.
-</p>
-
-</section>
-
-<!-- CONTACT -->
-
-<section id="contact">
-
-<h2>Contact</h2>
-
-<input id="email" placeholder="Your Email">
-
-<textarea id="msg" placeholder="Message"></textarea>
-
-<button onclick="sendMail()">Send</button>
-
-</section>
-
-<!-- CV MODAL -->
-
-<div id="cv-modal">
-
-<iframe src="Kaushal_cv.pdf"></iframe>
-
-</div>
-
+<!-- SCRIPTS -->
 <script>
+/* ======= Config (from CV) ======= */
+const PROFILE = {
+  email: "kaushaldholakiya4@gmail.com",
+  phone: "+91 8104451162",
+  githubUser: "KD-2004",
+  htb: "KD-2004",
+  thm: "KD234",
+  linkedin: "https://www.linkedin.com/in/kaushal-dholakiya-0641733a7/",
+  resume: "Kaushal_cv.pdf"
+};
 
-/* MATRIX */
+/* show year */
+document.getElementById('year').textContent = new Date().getFullYear();
 
-const canvas=document.getElementById("matrix")
-const ctx=canvas.getContext("2d")
+/* ======= Loader sequence ======= */
+const loader = document.getElementById('loader');
+const loaderLines = document.getElementById('loaderLines');
+const loaderBar = document.getElementById('loaderBar');
+const loaderStatus = document.getElementById('loaderStatus');
 
-canvas.width=window.innerWidth
-canvas.height=window.innerHeight
+(async function boot(){
+  const steps = [
+    "initializing kernel...",
+    "decrypting local profile...",
+    "mounting matrix renderer...",
+    "spawning terminal...",
+    "syncing repos and projects...",
+    "finalizing UI shaders..."
+  ];
+  for(let i=0;i<steps.length;i++){
+    loaderStatus.textContent = steps[i];
+    loaderLines.textContent += '› ' + steps[i] + '\n';
+    loaderBar.style.width = Math.round(((i+1)/steps.length)*100) + '%';
+    await new Promise(r=>setTimeout(r, 420 + Math.random()*620));
+  }
+  loader.style.transition = 'opacity .45s ease';
+  loader.style.opacity = '0';
+  setTimeout(()=> loader.style.display='none', 500);
+})();
+window.addEventListener('keydown', e => { if(e.key === 'Escape') loader.style.display='none' });
 
-const letters="01"
+/* ======= Matrix background ======= */
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+let fontSize = 14, columns = 0, drops = [];
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
 
-const font=14
+function resizeMatrix(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  fontSize = Math.max(12, Math.floor(innerWidth / 120));
+  columns = Math.floor(canvas.width / fontSize);
+  drops = new Array(columns).fill(1);
+  ctx.font = fontSize + 'px monospace';
+}
+window.addEventListener('resize', resizeMatrix);
+resizeMatrix();
 
-const columns=canvas.width/font
+function drawMatrix(){
+  ctx.fillStyle = 'rgba(0,0,0,0.12)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = 'rgba(0,212,255,0.85)';
+  ctx.font = fontSize + 'px monospace';
+  for(let i=0;i<drops.length;i++){
+    const text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 33);
 
-const drops=Array(Math.floor(columns)).fill(1)
+/* ======= Terminal simulation (safe demo) ======= */
+const termBody = document.getElementById('termBody') || (function(){ // create if missing
+  const t = document.createElement('div'); t.id='termBody'; t.className='term-body'; return t;
+})();
+if(!document.getElementById('termBody')) {
+  // find a terminal container (we have one in hero right side)
+  const term = document.querySelector('.terminal');
+  if(term) term.appendChild(termBody);
+}
+const TERM_LINES = [
+  {c:'whoami', o: 'kaushal'},
+  {c:'date', o: new Date().toString()},
+  {c:'nmap -sC -sV 10.10.10.0/24', o: '10.10.10.12 ssh | 10.10.10.22 http (nginx)'},
+  {c:'python3 poc.py --target 10.10.10.22', o: '[+] PoC simulated: CVE-2024-XXXX (demo)'},
+  {c:'cat resume_meta.txt', o: `EMAIL: ${PROFILE.email} | HTB: ${PROFILE.htb}`}
+];
 
-function draw(){
+let tIndex = 0;
+async function typeLine(el, text, cls='term-cmd'){
+  const line = document.createElement('div');
+  line.className = 'line ' + cls;
+  el.appendChild(line);
+  for(let ch of text){
+    line.textContent += ch;
+    await new Promise(r=>setTimeout(r, 8 + Math.random()*12));
+    el.scrollTop = el.scrollHeight;
+  }
+  return line;
+}
+(async function runTerminal(){
+  const termContainer = document.querySelector('.terminal');
+  if(!termContainer) return;
+  // add header area
+  const head = document.createElement('div'); head.className='term-head'; head.innerHTML = '<span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span><div style="margin-left:auto;color:var(--muted);font-size:13px">kd@portfolio:~$</div>';
+  termContainer.prepend(head);
+  const body = document.createElement('div'); body.style= 'overflow:auto;flex:1'; termContainer.appendChild(body);
+  // loop
+  while(true){
+    const item = TERM_LINES[tIndex % TERM_LINES.length];
+    await typeLine(body, 'kd@portfolio:~$ ' + item.c, 'term-cmd');
+    await new Promise(r=>setTimeout(r, 200 + Math.random()*600));
+    await typeLine(body, item.o, 'term-out');
+    tIndex++;
+    if(body.childElementCount > 28) { while(body.childElementCount > 20) body.removeChild(body.firstChild); }
+    await new Promise(r=>setTimeout(r, 700 + Math.random()*1200));
+  }
+})().catch(()=>{});
 
-ctx.fillStyle="rgba(0,0,0,.05)"
-ctx.fillRect(0,0,canvas.width,canvas.height)
+/* ======= CV Modal ======= */
+const cvModal = document.getElementById('cv-modal');
+const cvFrame = document.getElementById('cvFrame');
+document.getElementById('openCvTop').addEventListener('click', openCv);
+document.getElementById('openCvHero').addEventListener('click', openCv);
+document.getElementById('closeCv').addEventListener('click', ()=> { cvModal.style.display = 'none'; });
+document.getElementById('downloadCv').href = PROFILE.resume;
+function openCv(){ cvFrame.src = PROFILE.resume; cvModal.style.display = 'block'; }
 
-ctx.fillStyle="#00f3ff"
-ctx.font=font+"px monospace"
+/* ======= Contact form actions ======= */
+const sendBtn = document.getElementById('sendBtn');
+const saveBtn = document.getElementById('saveBtn');
+const downloadCvBtn = document.getElementById('downloadCvBtn');
+const cfStatus = document.getElementById('cf_status');
 
-for(let i=0;i<drops.length;i++){
+sendBtn.addEventListener('click', ()=> {
+  const name = document.getElementById('cf_name').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const msg = document.getElementById('cf_msg').value.trim();
+  if(!name || !email || !msg){ showStatus('Please fill all fields', false); return; }
+  if(!/^\S+@\S+\.\S+$/.test(email)){ showStatus('Invalid email', false); return; }
+  // save copy locally
+  const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
+  stored.push({name,email,msg,ts:Date.now()});
+  localStorage.setItem('kd_contacts', JSON.stringify(stored));
+  // open mail client
+  const subject = encodeURIComponent('Portfolio contact from ' + name);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}\n\n--\nSent via portfolio`);
+  window.location.href = `mailto:${PROFILE.email}?subject=${subject}&body=${body}`;
+  showStatus('Opening mail client...', true);
+});
 
-const text=letters[Math.floor(Math.random()*letters.length)]
+saveBtn.addEventListener('click', ()=>{
+  const name = document.getElementById('cf_name').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const msg = document.getElementById('cf_msg').value.trim();
+  if(!name || !email || !msg){ showStatus('Please fill all fields', false); return; }
+  const stored = JSON.parse(localStorage.getItem('kd_contacts')||'[]');
+  stored.push({name,email,msg,ts:Date.now()});
+  localStorage.setItem('kd_contacts', JSON.stringify(stored));
+  showStatus('Saved locally. Use the mail button to send.', true);
+});
 
-ctx.fillText(text,i*font,drops[i]*font)
+downloadCvBtn.addEventListener('click', ()=> { window.location.href = PROFILE.resume; });
 
-if(drops[i]*font>canvas.height&&Math.random()>.975) drops[i]=0
-
-drops[i]++
-
+function showStatus(txt, ok=true){
+  cfStatus.style.display = 'block';
+  cfStatus.style.color = ok ? 'lightgreen' : '#ff9a9a';
+  cfStatus.textContent = txt;
+  setTimeout(()=> cfStatus.style.display = 'none', 6000);
 }
 
-}
+/* ======= Copy helpers & mobile toggle ======= */
+document.getElementById('copyEmail').addEventListener('click', ()=> navigator.clipboard?.writeText(PROFILE.email).then(()=> alert('Email copied')));
+document.getElementById('copyPhone').addEventListener('click', ()=> navigator.clipboard?.writeText(PROFILE.phone).then(()=> alert('Phone copied')));
 
-setInterval(draw,33)
+document.getElementById('mobileToggle').addEventListener('click', ()=>{
+  const nav = document.getElementById('navLinks');
+  nav.classList.toggle('mobile-open');
+});
 
-/* TERMINAL */
+/* ======= GitHub public repos fetch (top 6) ======= */
+(async function loadRepos(){
+  const grid = document.getElementById('repoGrid');
+  grid.innerHTML = '<div class="dt">Loading public repos...</div>';
+  try{
+    const res = await fetch(`https://api.github.com/users/${PROFILE.githubUser}/repos?sort=updated&per_page=6`);
+    if(!res.ok) throw new Error('Fetch failed');
+    const repos = await res.json();
+    if(!Array.isArray(repos) || repos.length===0){ grid.innerHTML = '<div class="dt">No public repos found.</div>'; return; }
+    grid.innerHTML = '';
+    repos.forEach(r => {
+      const card = document.createElement('article'); card.className='panel';
+      card.innerHTML = `<h4 style="color:var(--neon)">${r.name}</h4><div class="dt">${r.description || ''}</div><div style="margin-top:8px" class="project-meta"><a class="tag" href="${r.html_url}" target="_blank"><i class="fa fa-github mr-1"></i>Repo</a><span class="tag">⭐ ${r.stargazers_count}</span><span class="tag">${r.language || ''}</span></div>`;
+      grid.appendChild(card);
+    });
+  }catch(e){
+    grid.innerHTML = '<div class="dt">Failed to load repos — rate limit or network issue.</div>';
+  }
+})();
 
-const terminal=document.getElementById("terminal")
-
-const lines=[
-"whoami",
-"Kaushal",
-"Running security scan...",
-"Scanning network...",
-"Ports discovered: 22,80,443",
-"Running exploit simulation...",
-"Access granted",
-]
-
-let i=0
-
-function type(){
-
-if(i<lines.length){
-
-const div=document.createElement("div")
-
-div.className="line"
-
-div.textContent=lines[i]
-
-terminal.appendChild(div)
-
-terminal.scrollTop=terminal.scrollHeight
-
-i++
-
-}
-
-}
-
-setInterval(type,1200)
-
-/* CONTACT */
-
-function sendMail(){
-
-const email=document.getElementById("email").value
-
-const msg=document.getElementById("msg").value
-
-window.location.href=
-`mailto:kaushaldholakiya4@gmail.com?subject=Portfolio Contact&body=${msg}`
-
-}
-
-/* CV */
-
-function openCV(){
-
-document.getElementById("cv-modal").style.display="block"
-
-}
+/* ======= Small accessibility tweaks ======= */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e => { const id = a.getAttribute('href').slice(1); const el = document.getElementById(id); if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'});} });
+});
 
 </script>
-
 </body>
 </html>
