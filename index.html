@@ -57,7 +57,8 @@ a { color: inherit; }
 
 /* project detail styles */
 .project-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
-.tag{padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:var(--muted);background:rgba(255,255,255,0.01);font-size:12px}
+.tag{padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:var(--muted);background:rgba(255,255,255,0.01);font-size:12px;cursor:pointer;transition:0.1s}
+.tag:hover{color:var(--cyan);border-color:var(--cyan)}
 
 /* progress */
 .meter{height:10px;background:#111;border-radius:8px;overflow:hidden}
@@ -109,6 +110,8 @@ a { color: inherit; }
     <a href="#project-details">Project Details</a>
     <a href="#education">Education</a>
     <a href="#contact">Contact</a>
+    <!-- NEW AI BUTTON (dark mode chat) -->
+    <button id="openAI" class="tag"><i class="fa fa-robot mr-1"></i> AI</button>
     <button id="openCvTop" class="resume-btn">Resume</button>
   </nav>
 
@@ -501,6 +504,21 @@ a { color: inherit; }
   </div>
 </div>
 
+<!-- ========== NEW AI CHAT MODAL (dark, chatgpt-like) ========== -->
+<div id="ai-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.96);padding:20px">
+  <div style="max-width:900px;margin:auto;height:90vh;background:#050505;border-radius:10px;border:1px solid rgba(0,255,200,0.2);display:flex;flex-direction:column">
+    <div style="padding:12px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center">
+      <strong style="color:#00f3ff">KD AI Assistant <span style="color:var(--muted);font-size:12px;margin-left:8px;">(llama-3.1-8b)</span></strong>
+      <button id="closeAI" class="tag">Close</button>
+    </div>
+    <div id="chatMessages" style="flex:1;overflow:auto;padding:16px;font-family:monospace;display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,0.1);display:flex;gap:10px">
+      <input id="aiInput" placeholder="Ask the AI about security, projects, or anything..." style="flex:1;background:#000;border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:6px;color:#fff;font-family:monospace;">
+      <button id="sendAI" class="resume-btn">Send</button>
+    </div>
+  </div>
+</div>
+
 <!-- Accessibility helper -->
 <a id="skip" href="#about" class="sr-only">Skip to content</a>
 
@@ -712,6 +730,77 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click', e => { const id = a.getAttribute('href').slice(1); const el = document.getElementById(id); if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'});} });
 });
 
+/* ========== NEW AI CHAT FUNCTIONALITY ========== */
+const aiModal = document.getElementById("ai-modal");
+const openAI = document.getElementById("openAI");
+const closeAI = document.getElementById("closeAI");
+const sendAI = document.getElementById("sendAI");
+const aiInput = document.getElementById("aiInput");
+const chatMessages = document.getElementById("chatMessages");
+
+openAI.onclick = () => aiModal.style.display = "block";
+closeAI.onclick = () => aiModal.style.display = "none";
+
+function addMessage(text, type) {
+  const msg = document.createElement("div");
+  msg.style.marginBottom = "8px";
+  msg.style.whiteSpace = "pre-wrap";
+  msg.style.wordBreak = "break-word";
+  if (type === "user") {
+    msg.style.color = "#00ff41";
+    msg.innerHTML = `<span style="color:#00ff41; opacity:0.7;">❯❯</span> ${text}`;
+  } else if (type === "ai") {
+    msg.style.color = "#00f3ff";
+    msg.innerHTML = `<span style="color:#00f3ff; opacity:0.7;">◈</span> ${text}`;
+  } else if (type === "error") {
+    msg.style.color = "#ff6b6b";
+    msg.innerHTML = `⚠️ ${text}`;
+  }
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+sendAI.onclick = async () => {
+  const prompt = aiInput.value.trim();
+  if (!prompt) return;
+
+  addMessage(prompt, "user");
+  aiInput.value = "";
+  addMessage("thinking...", "ai");
+
+  try {
+    const res = await fetch("https://kd-backend-xlpm.onrender.com/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    // remove "thinking..." message
+    if (chatMessages.lastChild && chatMessages.lastChild.textContent.includes("thinking...")) {
+      chatMessages.removeChild(chatMessages.lastChild);
+    }
+
+    addMessage(data.response || "no response field", "ai");
+  } catch (err) {
+    // remove thinking
+    if (chatMessages.lastChild && chatMessages.lastChild.textContent.includes("thinking...")) {
+      chatMessages.removeChild(chatMessages.lastChild);
+    }
+    addMessage("Error: " + err.message, "error");
+  }
+};
+
+aiInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendAI.click();
+  }
+});
+
+// close modal when clicking outside content? optional: keep simple, click close button only.
 </script>
 </body>
 </html>
