@@ -37,7 +37,30 @@ a { color: inherit; }
 
 /* hero */
 .hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:40;padding:84px 20px 40px}
-.avatar{width:120px;height:120px;border-radius:999px;border:2px solid var(--neon);overflow:hidden}
+.avatar{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  border:2px solid var(--cyan);
+  overflow:hidden;
+  object-fit:cover;
+
+  box-shadow:
+    0 0 20px var(--cyan),
+    0 0 40px rgba(0,255,255,0.5),
+    inset 0 0 20px rgba(0,255,255,0.3);
+
+  transition:0.4s;
+}
+
+.avatar:hover{
+  transform:scale(1.08) rotate(2deg);
+
+  box-shadow:
+    0 0 30px var(--neon),
+    0 0 60px var(--cyan),
+    0 0 90px rgba(0,255,255,0.6);
+}
 .title{font-size:44px;color:var(--cyan);font-weight:800;letter-spacing:1px}
 .subtitle{color:var(--neon);font-weight:600;margin-top:8px}
 
@@ -123,7 +146,7 @@ a { color: inherit; }
 <!-- HERO -->
 <section class="hero" id="home" aria-label="Intro">
   <div class="panel" style="display:flex;gap:18px;align-items:center;flex-direction:column;max-width:980px;">
-    <img class="avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Hacker&backgroundColor=00ff00&baseColor=222222">
+    <img class="avatar" src="hacker.avif" alt="Kaushal Hacker Avatar">
     <div class="title">KAUSHAL DHOLAKIYA</div>
     <div class="subtitle">Penetration Tester • VAPT Analyst • AI & Systems Engineer</div>
 
